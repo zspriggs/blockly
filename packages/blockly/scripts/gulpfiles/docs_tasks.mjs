@@ -7,6 +7,67 @@ import rename from 'gulp-rename';
 
 const DOCS_DIR = '../docs/docs/reference';
 const REFERENCE_SIDEBAR_DIR = DOCS_DIR;
+const GITHUB_SOURCE_BASE =
+    'https://github.com/RaspberryPiFoundation/blockly/blob/main/packages/blockly/';
+
+/**
+ * Build a map from normalized API item name to GitHub source URL.
+ * Reads blockly.api.json; only top-level entries carry a fileUrlPath.
+ * Normalisation: strip underscores and lowercase so "block_svg" matches "BlockSvg".
+ */
+const buildSourceLinkMap = function() {
+  const apiJson = JSON.parse(fs.readFileSync('temp/blockly.api.json', 'utf8'));
+  const entryPoint = apiJson.members?.[0];
+  const map = new Map();
+  for (const member of entryPoint?.members ?? []) {
+    if (!member.fileUrlPath || !member.name) continue;
+    // dist/core/block.d.ts -> core/block.ts
+    const sourcePath = member.fileUrlPath
+        .replace(/^dist\//, '')
+        .replace(/\.d\.ts$/, '.ts');
+    const url = GITHUB_SOURCE_BASE + sourcePath;
+    const key = member.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+    map.set(key, url);
+  }
+  return map;
+};
+
+/**
+ * Inject a "View source on GitHub" link into each generated .md doc.
+ * Runs after generateDocs so we're working with the raw .md files.
+ * The link is appended as a small paragraph directly after the first ## heading.
+ */
+const injectSourceLinks = function(done) {
+  const sourceMap = buildSourceLinkMap();
+  const files = fs.readdirSync(DOCS_DIR).filter(f => f.endsWith('.md'));
+
+  for (const file of files) {
+    const parts = file.replace('.md', '').split('.');
+    if (parts.length < 2) continue;
+
+    // parts[1] is the top-level entity slug, e.g. "block_svg_class"
+    const baseName = parts[1]
+        .replace(/_(class|namespace|interface|enum|type|variable|function)$/, '');
+    const key = baseName.toLowerCase().replace(/_/g, '');
+
+    const sourceUrl = sourceMap.get(key);
+    if (!sourceUrl) continue;
+
+    const filePath = path.join(DOCS_DIR, file);
+    let content = fs.readFileSync(filePath, 'utf8');
+
+    // Insert after the first ## heading
+    const headingMatch = content.match(/^## .+$/m);
+    if (!headingMatch) continue;
+    const insertAt = content.indexOf(headingMatch[0]) + headingMatch[0].length;
+    const link = `\n\n[View source](${sourceUrl})`;
+    content = content.slice(0, insertAt) + link + content.slice(insertAt);
+
+    fs.writeFileSync(filePath, content, 'utf8');
+  }
+
+  done();
+};
 
 /**
  * Run API Extractor to generate the intermediate json file.
@@ -499,4 +560,4 @@ const createReferenceSidebar = function(done) {
 }
 
 export const docs = gulp.series(
-    generateApiJson, removeRenames, generateDocs, convertToMdx, cleanMdFiles, fixMdxIssues, prependFrontmatter, createReferenceSidebar);
+    generateApiJson, removeRenames, generateDocs, injectSourceLinks, convertToMdx, cleanMdFiles, fixMdxIssues, prependFrontmatter, createReferenceSidebar);
