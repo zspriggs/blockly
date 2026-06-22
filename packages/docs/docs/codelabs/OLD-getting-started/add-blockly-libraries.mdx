@@ -6,41 +6,31 @@ description: How to add Blockly libraries to an app.
 
 ## 4. Add Blockly libraries
 
-To start, you'll need to add Blockly dependencies to your app.
+Now that you know what you'll be building, you need to add Blockly dependencies to your app.
 
-Blockly releases are [published on npm](https://www.npmjs.com/package/blockly) on a quarterly basis. 
-There are multiple ways to import Blockly into your project, but for this codelab you will be using *injection*. 
-TODO: explain injection
+Blockly releases are [published on npm](https://www.npmjs.com/package/blockly) on a quarterly basis. For this codelab you will import blockly using [unpkg](https://unpkg.com), which lets you import all of the files you need with a single script tag.
 
-### Create index.html
-Open `starter-code/src` and create a new file called `index.html`.
-In this file, you'll specify some basic structure for your webpage.
-You'll also make a div (here called `blocklyDiv`) to inject Blockly into.
+### Add the script tag
 
-Copy and paste the following HTML into your `index.html` file.
+Open `starter-code/index.html` in a text editor and scroll to the end. You can see two script tags:
 
 ```html
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Blockly Sample App</title>
-  </head>
-  <body>
-    <div id="pageContainer">
-      <div id="outputPane">
-        <pre id="generatedCode"><code></code></pre>
-        <div id="output"></div>
-      </div>
-      <div id="blocklyDiv"></div>
-    </div>
-  </body>
-</html>
+<script src="scripts/music_maker.js"></script>
+<script src="scripts/main.js"></script>
+```
+
+Add Blockly just before these two scripts. The order is important, because you will use Blockly objects later in `main.js`. Your imports should now look like this:
+
+```html
+<script src="https://unpkg.com/blockly/blockly_compressed.js"></script>
+<script src="https://unpkg.com/blockly/blocks_compressed.js"></script>
+<script src="https://unpkg.com/blockly/javascript_compressed.js"></script>
+<script src="https://unpkg.com/blockly/msg/en.js"></script>
+<script src="scripts/music_maker.js"></script>
+<script src="scripts/main.js"></script>
 ```
 
 ### Default imports
- 
-TODO: this is true for when you use unpckg, but not necessarily in this case right?
 
 Importing Blockly this way loads four default modules.
 
