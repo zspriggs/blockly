@@ -8,33 +8,58 @@ import Image from '@site/src/components/Image';
 
 ## 8. Generate JavaScript code
 
-Now that each button can be configured with its own Blockly workspace, the next thing we want to do is to generate JavaScript code from each workspace.
+The next thing we want to do is to generate JavaScript code. 
 
 This generated code will be run by the browser, effectively executing the blocks set up in the Blockly workspace.
 
 ### The language generator
 
-Blockly can generate code from blocks for different languages, e.g. JavaScript, Python, or PHP.
+A _language generator_ defines the rules for generating a specific language (such as indentation).
 
-A _language generator_ defines the rules for generating a specific language (such as indentation). Because we are using the default imports, we don't need to add any new code to get the JavaScript generator.
+Blockly can generate code from blocks for five different languages: Dart, JavaScript, Lua, PHP, and Python. 
+You can also create a custom code generator to generate code in a different language, which the [custom generator codelab]() walks through. 
 
+TODO: gotta figure out the imports stuff
 As previously mentioned, you can define your imports more carefully to get a [different generator](https://www.npmjs.com/package/blockly#blockly-generators).
 
 ### Add a block generator
 
 When Blockly generates JavaScript code for blocks in a workspace, it translates each block into code. By default, it knows how to translate all library-provided default blocks into JavaScript code. However, for any custom blocks, we need to specify our own translation functions. These are called _block generators_.
 
-Add the following code to the bottom of `scripts/sound_blocks.js`:
+Find the `javascript.js` file in `src/generators/`. This is where you will tell Blockly's JavaScript generator how to generate code for the add text block. 
 
+Add the following code to the bottom of `src/sound_blocks.js`:
+
+TODO: explain this code a bit
 ```js
-javascript.javascriptGenerator.forBlock['play_sound'] = function (block) {
-  let value = "'" + block.getFieldValue('VALUE') + "'";
-  return 'MusicMaker.queueSound(' + value + ');\n';
+import {Order} from 'blockly/javascript';
+
+export const forBlock = Object.create(null);
+
+forBlock['add_text'] = function (block, generator) {
+  const text = generator.valueToCode(block, 'TEXT', Order.NONE) || "''";
+  const addText = generator.provideFunction_(
+    'addText',
+    `function ${generator.FUNCTION_NAME_PLACEHOLDER_}(text) {
+
+  // Add text to the output area.
+  const outputDiv = document.getElementById('output');
+  const textEl = document.createElement('p');
+  textEl.innerText = text;
+  outputDiv.appendChild(textEl);
+}`,
+  );
+  // Generate the function call for this block.
+  const code = `${addText}(${text});\n`;
+  return code;
 };
 ```
 
-With this translation function, the following `play_sound` block:
+The code that this generates is a JavaScript function which adds text to the output area. 
 
+With this translation function, the following `add_text` block:
+
+TODO: update image!!
 <Image
   src="/images/codelabs/getting-started/play_sound_block.png"
   alt="image"
@@ -44,7 +69,13 @@ With this translation function, the following `play_sound` block:
 translates into the JavaScript code:
 
 ```javascript
-MusicMaker.queueSound('Sounds/c4.m4a');
+addText(text) {
+  // Add text to the output area.
+  const outputDiv = document.getElementById('output');
+  const textEl = document.createElement('p');
+  textEl.innerText = text;
+  outputDiv.appendChild(textEl);
+};
 ```
 
 For more information on block generators, read the [generating code](/guides/create-custom-blocks/code-generation/overview#block-code-generators) page on the developer site.

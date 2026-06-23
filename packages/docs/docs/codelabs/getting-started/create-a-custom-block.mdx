@@ -8,104 +8,98 @@ import Image from '@site/src/components/Image';
 
 ## 6. Create a custom block
 
-Since this is a music maker app, we want a block that plays sounds. We could create one block per sound, but instead we will create a single block with a dropdown to select which note to play:
-
-<Image
-  src="/images/codelabs/getting-started/play_sound_block.png"
-  alt="image"
-  className="codelabImage"
-/>
+Let's add a custom block to the workspace. 
 
 In Blockly, a _block definition_ describes how a block looks and behaves. This includes its text, colour, and shape. It may also include which other blocks it can connect to.
 
 Blocks can be defined in either JavaScript or JSON. The developer site has a full article on [how to define a block](/guides/create-custom-blocks/define/block-definitions#how-to-create-block-definitions).
+There are also more opinionated guides on things like [block design](/guides/design/blocks) and [block appearance](guides/design/apperance) that reflect recommended best practices when creating blocks.
 
 In this codelab we will simply provide the block definition for you to copy and use.
 
-### Define the sound block
+### Define the add_text block
 
-Create a JS file to define a new "play sound" block:
+Imagine you want to build a block that adds text to the output div of this workspace. 
+We'll start with the block definition, and then add the ability to generate JavaScript code with that block. 
 
-1. Add `sound_blocks.js` file in the `scripts` directory.
-1. Add the following code to `sound_blocks.js`:
+The [Anatomy of a block](/guides/create-custom-blocks/define/block-anatomy/) page describes the parts of a block in detail. 
 
+Find the `text.js` file in `src/blocks/`. Here you'll specify your block definition. Add the following code to `text.js`:
 ```js
-Blockly.common.defineBlocksWithJsonArray([
-  {
-    type: 'play_sound',
-    message0: 'Play %1',
-    args0: [
-      {
-        type: 'field_dropdown',
-        name: 'VALUE',
-        options: [
-          ['C4', 'sounds/c4.m4a'],
-          ['D4', 'sounds/d4.m4a'],
-          ['E4', 'sounds/e4.m4a'],
-          ['F4', 'sounds/f4.m4a'],
-          ['G4', 'sounds/g4.m4a'],
-        ],
-      },
-    ],
-    previousStatement: null,
-    nextStatement: null,
-    colour: 355,
-  },
-]);
-```
+import * as Blockly from 'blockly/core';
 
-Add a script tag to `index.html` to include your new block definition:
-
-```html
-<script src="scripts/sound_blocks.js"></script>
-```
-
-Your sound block definitions must come after importing Blockly and before the other imports, since you will use Blockly functions in this file, and you will be using functions from this file in later files. Your imports should now look like this:
-
-```html
-<script src="https://unpkg.com/blockly"></script>
-<script src="scripts/sound_blocks.js"></script>
-<script src="scripts/music_maker.js"></script>
-<script src="scripts/main.js"></script>
-```
-
-### Add the sound block to the toolbox
-
-Now we can update the toolbox to include the new sound block, by adding `{'kind': 'block', 'type': 'play_sound'}` to our `toolbox` definition:
-
-```js
-const toolbox = {
-  kind: 'flyoutToolbox',
-  contents: [
+// Create a custom block called 'add_text' that adds
+// text to the output div on the sample app.
+const addText = {
+  type: 'add_text',
+  message0: 'Add text %1',
+  args0: [
     {
-      kind: 'block',
-      type: 'controls_repeat_ext',
-      inputs: {
-        TIMES: {
-          shadow: {
-            type: 'math_number',
-            fields: {
-              NUM: 5,
-            },
-          },
-        },
-      },
-    },
-    {
-      kind: 'block',
-      type: 'play_sound',
+      type: 'input_value',
+      name: 'TEXT',
+      check: 'String',
     },
   ],
+  previousStatement: null,
+  nextStatement: null,
+  colour: 160,
+  tooltip: '',
+  helpUrl: '',
 };
 ```
 
-Run the app one more time, and play around with the new `Play (sound)` block. It should look like this:
+The page on [Block structure in JSON](/guides/create-custom-blocks/define/structure-json) is also a good resource for understanding the parts of a JSON block definition. 
 
-<Image
-  src="/images/codelabs/getting-started/workspace_with_toolbox.png"
-  alt="image"
-  className="codelabImage"
-/>
+The block definition for `add_text` includes the following 
+Note that not all of these are required for a block definition. 
+For example, `previousStatement` and `nextStatement` should be left out of a block definition if the block does not allow statements to be stacked above or below itself. 
+
+- `type`: The name for this block. 
+- `message0`: The label for the block.
+- `args0`: The inputs to the block.
+  - `type`: The type of input.
+  - `name`: The unique name of the input.
+  - `check`: The expected type of the input. 
+- `previousStatement`: Include if other statements can be stacked above this block. 
+- `nextStatement`: Include if other statements can be stacked below this block. 
+- `colour`: The color of the block.
+- `tooltip`: A message that displays when the user hovers their mouse over the block.
+- `helpUrl`: The URL that a user is sent to after right-clicking the block and selecting 'Help'.
+
+### Create Block Definition
+
+After defining the JSON definition for the block, we'll need to create the block definition. 
+Add the following code to the end of `text.js` in `src/blocks/`, after your `addText` object.
+
+```js
+// Create the block definitions for the JSON-only blocks.
+// This does not register their definitions with Blockly.
+// This file has no side effects!
+export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
+  addText,
+]);
+```
+
+### Register the custom block
+
+The block is all set up, now we just need to register it. Add the following import statement and code to the top of `src/index.js`
+
+```js
+import {blocks} from './blocks/text';
+
+Blockly.common.defineBlocks(blocks);
+```
+
+### Add the custom block to the toolbox
+
+Now we can update the toolbox to include the new block, by adding `{'kind': 'block', 'type': 'add_text'}` to our `toolbox` definition:
+
+```js
+// TODO: toolbox def with custom block
+```
+
+Refresh the page. 
+TODO: it might glitch out bc no generator def :/
 
 ### The block factory
 

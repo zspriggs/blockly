@@ -4,50 +4,25 @@ description: How to add Blockly libraries to an app.
 
 # Getting started with Blockly
 
-## 4. Add Blockly libraries
+## 3. Add Blockly libraries
 
 To start, you'll need to add Blockly dependencies to your app.
 
 Blockly releases are [published on npm](https://www.npmjs.com/package/blockly) on a quarterly basis. 
-There are multiple ways to import Blockly into your project, but for this codelab you will be using *injection*. 
-TODO: explain injection
+There are multiple ways to import Blockly into your project, but for this codelab you will be using npm. 
 
-### Create index.html
-Open `starter-code/src` and create a new file called `index.html`.
-In this file, you'll specify some basic structure for your webpage.
-You'll also make a div (here called `blocklyDiv`) to inject Blockly into.
+### Install dependencies and run your app
 
-Copy and paste the following HTML into your `index.html` file.
+For this codelab, you'll use npm to run your app. Use the following instructions
 
-```html
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Blockly Sample App</title>
-  </head>
-  <body>
-    <div id="pageContainer">
-      <div id="outputPane">
-        <pre id="generatedCode"><code></code></pre>
-        <div id="output"></div>
-      </div>
-      <div id="blocklyDiv"></div>
-    </div>
-  </body>
-</html>
-```
+1. Install [node.js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) if you haven't already.
+2. Navigate to the starter code folder `packages/docs/docs/codelabs/getting-started/starter-code` 
+in your terminal.
+3. Run `npm install` in your terminal. npm install will install the necessary dependencies that are defined in package.json, which includes Blockly. 
+4. Run `npm start` in your terminal. 
 
-### Default imports
- 
-TODO: this is true for when you use unpckg, but not necessarily in this case right?
-
-Importing Blockly this way loads four default modules.
-
-- Blockly core: The main Blockly library, which defines the basic Blockly UI and logic.
-- Built-in block definitions: Common blocks such as loops, logic, math, and string manipulation.
-- The JavaScript generator: Converts blocks into JavaScript, and contains block generators for all built-in blocks.
-- English language files: String tables for all messages on built-in blocks and the Blockly UI, in English.
+After following these steps, a browser page should open automatically, or you can copy-paste the address that includes `localhost` into your browser. 
+The page should be blank. Don't worry, we'll add in our Blockly workspace in the following step.
 
 ### Alternate imports
 

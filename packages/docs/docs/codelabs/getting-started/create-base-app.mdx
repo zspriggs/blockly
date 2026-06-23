@@ -1,0 +1,40 @@
+---
+description: How to set up the base for your app.
+---
+
+# Getting started with Blockly
+
+## 4. Add basic HTML and CS
+
+### Create HTML for your page
+Open `starter-code/src/` and find the file called `index.html`. In this file, you'll specify some basic structure for your app.
+You'll also make a div (here called `blocklyDiv`) that you'll later inject Blockly into.
+
+Copy and paste the following HTML into your `index.html` file.
+
+```html
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Blockly Sample App</title>
+  </head>
+  <body>
+    <div id="pageContainer">
+      <div id="outputPane">
+        <pre id="generatedCode"><code></code></pre>
+        <div id="output"></div>
+      </div>
+      <div id="blocklyDiv"></div>
+    </div>
+  </body>
+</html>
+```
+
+### Examine the CSS for your page
+
+The css for the app is already included in `index.css`. This codelab just includes basic styling for the webpage itself. 
+
+If you would like to change the theme of Blockly, you can check out the [customizing your themes codelab](/codelabs/theme-extension-identifier/codelab-overview/) for an overview.
+
+There is also a [css codelab](codelabs/css/codelab-overview/) that offers a walkthrough of more fine-grained styling. 

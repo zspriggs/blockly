@@ -6,48 +6,87 @@ description: How to save and load your workspace.
 
 ## 7. Save/load workspace
 
-You now have a Blockly workspace that appears when editing a button. The user can use this to write code, but there's no link between the code the user has written and an individual button on the page.
-
-Once the button behavior is defined by the user, it needs to be saved for later use. The saved code must be per button, since buttons can be programmed to play different sounds.
+You now have a Blockly workspace. However, if you reload the page, you'll find that all your blocks disappear!
+Your users likely won't want their blocks to vanish, so let's add some serialization. 
+In this case, we'll save the state of the workspace to local browser storage, so that if you reload or close the tab, 
 
 ### Add the save method
 
-Open `scripts/main.js`. Add the following code to the `save()` method:
+Open `src/serialization.js`. We'll set a unique storage key for this codelab. `save` takes the Blockly workspace, exports its state to a JavaScript object, then saves that object to local storage. 
+
+Add the following code to `serialization.js`:
 
 ```js
-button.blocklySave = Blockly.serialization.workspaces.save(
-  Blockly.getMainWorkspace(),
-);
-```
+import * as Blockly from 'blockly/core';
 
-`workspaces.save` takes the Blockly workspace, exports its state to a JavaScript object and stores it in a `blocklySave` property on the button. This way the exported state for the block sequence gets associated with a particular button.
+const storageKey = 'getting-started-codelab/mainWorkspace';
+
+/**
+ * Saves the state of the workspace to browser's local storage.
+ * @param {Blockly.Workspace} workspace Blockly workspace to save.
+ */
+export const save = function (workspace) {
+  const data = Blockly.serialization.workspaces.save(workspace);
+  window.localStorage?.setItem(storageKey, JSON.stringify(data));
+};
+```
 
 ### Add the load method
 
-Similarly, when a user opens the editor, the blocks previously associated with this button should get loaded into the workspace.
+Similarly, when a user opens or reloads the page, the blocks in local storage should be loaded back into the workspace. 
 
-In the `scripts/main.js `file, add `loadWorkspace` function:
+In the `src/serialization.js `file, add the `load` function. `load` checks for items in local storage and loads them into the workspace.
 
-```
-function loadWorkspace(button) {
-  const workspace = Blockly.getMainWorkspace();
-  if (button.blocklySave) {
-    Blockly.serialization.workspaces.load(button.blocklySave, workspace);
-  } else {
-    workspace.clear();
-  }
-}
-```
+```js
+/**
+ * Loads saved state from local storage into the given workspace.
+ * @param {Blockly.Workspace} workspace Blockly workspace to load into.
+ */
+export const load = function (workspace) {
+  const data = window.localStorage?.getItem(storageKey);
+  if (!data) return;
 
-This loads the blocks stored on the button that was clicked back into the workspace.
-
-Call this function from the end of the function `enableBlocklyMode`:
-
-```
-function enableBlocklyMode(e) {
-  ...
-  loadWorkspace(currentButton);
-}
+  // Don't emit events during loading.
+  Blockly.Events.disable();
+  Blockly.serialization.workspaces.load(JSON.parse(data), workspace, false);
+  Blockly.Events.enable();
+};
 ```
 
-Now, test the code. Edit the workspace for one of the buttons, add some blocks, save it, and reopen it. The workspace should still contain the blocks you added.
+TODO: assess whether this needs to be split into a new page
+### Events
+
+You may have noticed that the `load` function disables events from emitting while loading the workspace. 
+Every change on the workspace triggers an event. For example, when a user drags a block into the workspace or connects two blocks, these actions will trigger events.
+
+In this case, disabling events while loading will help prevent unexpected behavior, since some parts of Blockly listen to the event stream to know when to execute.
+
+We can take advantage of the events stream to know when to call the `save` and `load` functions that you just implemented. 
+
+### Add a Change Listener
+In `src/index.js`, add the following import statement so that you can use the `save` and `load` functions from `serialization.js`.
+
+```js
+import {save, load} from './serialization';
+```
+
+Now, you'll add a `ChangeListener` to listen to the event stream. Every time an event fires, this function will trigger and save the workspace.  
+
+There are some types of events that we don't need to save after. 
+Whenever the user changes something about the UI by scrolling, zooming, or opening toolbox categories, we don't want to save the workspace because these changes don't actually the data of the workspace. 
+These types of events are called UI Events, so we'll ignore UI events in the `ChangeListener`.
+
+```js
+// Every time the workspace changes state, save the changes to storage.
+ws.addChangeListener((e) => {
+  // UI events are things like scrolling, zooming, etc.
+  // No need to save after one of these.
+  if (e.isUiEvent) return;
+  save(ws);
+});
+```
+
+To learn more about the events stream, see the [Events documentation](/guides/configure/events/).
+
+### Testing the changes
+Now, test the code. Add some blocks, then reload the page. The workspace should still contain the blocks you added.
