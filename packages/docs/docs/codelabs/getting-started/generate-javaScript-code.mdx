@@ -16,11 +16,8 @@ This generated code will be run by the browser, effectively executing the blocks
 
 A _language generator_ defines the rules for generating a specific language (such as indentation).
 
-Blockly can generate code from blocks for five different languages: Dart, JavaScript, Lua, PHP, and Python. 
-You can also create a custom code generator to generate code in a different language, which the [custom generator codelab]() walks through. 
-
-TODO: gotta figure out the imports stuff
-As previously mentioned, you can define your imports more carefully to get a [different generator](https://www.npmjs.com/package/blockly#blockly-generators).
+By default, Blockly can generate code from blocks for five languages: Dart, JavaScript, Lua, PHP, and Python. 
+You can also create a custom language generator to generate code in a different language, which the [custom generator codelab](/codelabs/custom-generator/codelab-overview/) describes. 
 
 ### Add a block generator
 
@@ -28,16 +25,19 @@ When Blockly generates JavaScript code for blocks in a workspace, it translates 
 
 Find the `javascript.js` file in `src/generators/`. This is where you will tell Blockly's JavaScript generator how to generate code for the add text block. 
 
-Add the following code to the bottom of `src/sound_blocks.js`:
+The block generator for `add_text`, will first recursively generate the code for the input `'TEXT'`. 
+Then, it provides the function that will add the text to the output area. Finally, it creates the function call that will be generated for this block. 
 
-TODO: explain this code a bit
+Add the following code to the bottom of `src/generators/javascript.js`:
 ```js
 import {Order} from 'blockly/javascript';
 
 export const forBlock = Object.create(null);
 
 forBlock['add_text'] = function (block, generator) {
+  // Generate the code for the input block.
   const text = generator.valueToCode(block, 'TEXT', Order.NONE) || "''";
+  // Create the function for this block.
   const addText = generator.provideFunction_(
     'addText',
     `function ${generator.FUNCTION_NAME_PLACEHOLDER_}(text) {
@@ -57,7 +57,7 @@ forBlock['add_text'] = function (block, generator) {
 
 The code that this generates is a JavaScript function which adds text to the output area. 
 
-With this translation function, the following `add_text` block:
+With this translation function, the following `add_text` block with a string input:
 
 TODO: update image!!
 <Image
@@ -76,6 +76,8 @@ addText(text) {
   textEl.innerText = text;
   outputDiv.appendChild(textEl);
 };
+
+addText("Hello, world!");
 ```
 
 For more information on block generators, read the [generating code](/guides/create-custom-blocks/code-generation/overview#block-code-generators) page on the developer site.

@@ -13,7 +13,7 @@ Let's add a custom block to the workspace.
 In Blockly, a _block definition_ describes how a block looks and behaves. This includes its text, colour, and shape. It may also include which other blocks it can connect to.
 
 Blocks can be defined in either JavaScript or JSON. The developer site has a full article on [how to define a block](/guides/create-custom-blocks/define/block-definitions#how-to-create-block-definitions).
-There are also more opinionated guides on things like [block design](/guides/design/blocks) and [block appearance](guides/design/apperance) that reflect recommended best practices when creating blocks.
+There are also opinionated guides on topics such as [block design](/guides/design/blocks) and [block appearance](guides/design/apperance) that reflect recommended best practices when creating blocks.
 
 In this codelab we will simply provide the block definition for you to copy and use.
 
@@ -21,8 +21,6 @@ In this codelab we will simply provide the block definition for you to copy and 
 
 Imagine you want to build a block that adds text to the output div of this workspace. 
 We'll start with the block definition, and then add the ability to generate JavaScript code with that block. 
-
-The [Anatomy of a block](/guides/create-custom-blocks/define/block-anatomy/) page describes the parts of a block in detail. 
 
 Find the `text.js` file in `src/blocks/`. Here you'll specify your block definition. Add the following code to `text.js`:
 ```js
@@ -50,8 +48,7 @@ const addText = {
 
 The page on [Block structure in JSON](/guides/create-custom-blocks/define/structure-json) is also a good resource for understanding the parts of a JSON block definition. 
 
-The block definition for `add_text` includes the following 
-Note that not all of these are required for a block definition. 
+The block definition for `add_text` includes the following parts, but note that there are more options and not all of these are required for a block definition. 
 For example, `previousStatement` and `nextStatement` should be left out of a block definition if the block does not allow statements to be stacked above or below itself. 
 
 - `type`: The name for this block. 
@@ -69,7 +66,7 @@ For example, `previousStatement` and `nextStatement` should be left out of a blo
 ### Create Block Definition
 
 After defining the JSON definition for the block, we'll need to create the block definition. 
-Add the following code to the end of `text.js` in `src/blocks/`, after your `addText` object.
+Add the following code to the end of `text.js`, after your `addText` object.
 
 ```js
 // Create the block definitions for the JSON-only blocks.
@@ -86,20 +83,52 @@ The block is all set up, now we just need to register it. Add the following impo
 
 ```js
 import {blocks} from './blocks/text';
+```
 
+Just after the import statements, insert the following code, which adds your custom block to the list of available blocks. 
+
+```js
 Blockly.common.defineBlocks(blocks);
 ```
 
 ### Add the custom block to the toolbox
 
-Now we can update the toolbox to include the new block, by adding `{'kind': 'block', 'type': 'add_text'}` to our `toolbox` definition:
+Now we can update the toolbox to include the new block, by adding `{'kind': 'block', 'type': 'add_text'}` to our `toolbox` definition. The full toolbox should now be:
 
 ```js
-// TODO: toolbox def with custom block
+export const toolbox = {
+  kind: 'flyoutToolbox',
+  contents: [
+    {
+      kind: 'block',
+      type: 'controls_repeat_ext',
+      inputs: {
+        TIMES: {
+          shadow: {
+            type: 'math_number',
+            fields: {
+              NUM: 3,
+            },
+          },
+        },
+      },
+    },
+    {
+      kind: 'block',
+      type: 'text',
+    },
+    {
+      kind: 'block',
+      type: 'add_text',
+    },
+  ]
+};
 ```
 
-Refresh the page. 
-TODO: it might glitch out bc no generator def :/
+Again, ensure that your files are saved, then check your `localhost` Blockly page. You should now see your custom `add_text` block in your toolbox! 
+
+TODO: add screenshot
+
 
 ### The block factory
 

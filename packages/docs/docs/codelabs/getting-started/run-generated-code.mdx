@@ -28,14 +28,14 @@ import {toolbox} from './toolbox';
 import './index.css';
 ```
 
-TODO: deal with this, I think maybe refactor to make this less weird if possible?
+Now you can add the `forBlock` for `add_text` into Blockly's javascriptGenerator so that Blockly can generate the code for your block.
+Put the following line of code into `index.js`, just below ```Blockly.common.defineBlocks(blocks);```
 
-Add the following line of code to `index.js`, just below ```Blockly.common.defineBlocks(blocks);```
 ```js
 Object.assign(javascriptGenerator.forBlock, forBlock);
 ```
 
-### Display and run the code
+### Write the function
 
 The following function uses Blockly's javascriptGenerator to generate the code for the blocks on the workspace. 
 Then it displays the code in the codeDiv, resets the outputDiv, and evaluates the JavaScript code. 
@@ -54,7 +54,7 @@ const runCode = () => {
 };
 ```
 
-### Automatically run the code
+### Run the code
 
 Now, we need to actually call this `runCode` function. 
 First let's consider the scenario where there's some state that needs to be loaded up. We'll want to load that state right away, and run the code as well. 
@@ -67,12 +67,16 @@ load(ws);
 runCode();
 ```
 
-Since this code is simply declared in `index.js`, it'll only run once, upon load of the workspace. 
+Since this code is simply declared in `index.js`, it'll only run whenever the workspace is loaded (or reloaded). 
 We want the code to run any time a block is added or changed in the workspace. This sounds like another job for change listeners!
+
+### Add a change listener
 
 Similar to our last change listener, we'll want to exclude certain types of events. This time, in addition to ignoring UI Events, we'll ignore an event that fires when the workspace has finished loading, since this would be redundant with the code we just added.
 We'll also disregard anything that fires when a block is currently being dragged so that we don't save an invalid state. 
-For all other events, this change listener will call `runCode()`
+For all other events, this change listener will call `runCode()`.
+
+Copy and paste the following code at the bottom of `index.js`:
 
 ```js 
 // Whenever the workspace changes meaningfully, run the code again.
@@ -91,8 +95,7 @@ ws.addChangeListener((e) => {
 });
 ```
 
-
-TODO: add a try catch to sample app? this would be good!!!!!!
+{/* TODO: add a try catch to sample app? this would be good!!!!!!
 Finally, execute the script with the `eval` function. Wrap it in a `try/catch` so that any runtime errors are logged to the console, instead of failing quietly:
 
 ```js
@@ -101,7 +104,7 @@ try {
 } catch (error) {
   console.log(error);
 }
-```
+``` */}
 
 ### A note on eval
 

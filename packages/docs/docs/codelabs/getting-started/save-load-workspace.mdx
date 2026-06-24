@@ -6,9 +6,8 @@ description: How to save and load your workspace.
 
 ## 7. Save/load workspace
 
-You now have a Blockly workspace. However, if you reload the page, you'll find that all your blocks disappear!
-Your users likely won't want their blocks to vanish, so let's add some serialization. 
-In this case, we'll save the state of the workspace to local browser storage, so that if you reload or close the tab, 
+You now have a Blockly workspace. However, if you reload the page, you'll find that any blocks you've dragged into the workspace will disappear!
+Your users likely won't want their blocks to vanish, so let's save the state of the workspace in local browser storage. 
 
 ### Add the save method
 
@@ -33,7 +32,7 @@ export const save = function (workspace) {
 
 ### Add the load method
 
-Similarly, when a user opens or reloads the page, the blocks in local storage should be loaded back into the workspace. 
+When a user opens or reloads the page, the blocks in local storage should be loaded back into the workspace. 
 
 In the `src/serialization.js `file, add the `load` function. `load` checks for items in local storage and loads them into the workspace.
 
@@ -53,28 +52,38 @@ export const load = function (workspace) {
 };
 ```
 
-TODO: assess whether this needs to be split into a new page
 ### Events
 
 You may have noticed that the `load` function disables events from emitting while loading the workspace. 
-Every change on the workspace triggers an event. For example, when a user drags a block into the workspace or connects two blocks, these actions will trigger events.
+Every change on the workspace, like dragging a block or connecting blocks, triggers an *event*. You can listen in to the *event stream* to run code when certain events happen.
 
-In this case, disabling events while loading will help prevent unexpected behavior, since some parts of Blockly listen to the event stream to know when to execute.
+For the `load` function, disabling events while loading will help prevent unexpected behavior, since some parts of Blockly listen to the event stream to know when to execute.
 
-We can take advantage of the events stream to know when to call the `save` and `load` functions that you just implemented. 
+We can take advantage of the event stream to know when to call the `save` and `load` functions. 
 
 ### Add a Change Listener
-In `src/index.js`, add the following import statement so that you can use the `save` and `load` functions from `serialization.js`.
+In `src/index.js`, add the following import statement.
 
 ```js
 import {save, load} from './serialization';
 ```
 
-Now, you'll add a `ChangeListener` to listen to the event stream. Every time an event fires, this function will trigger and save the workspace.  
+Now, you'll add a `ChangeListener` at the bottom of `index.js` to listen to the event stream. 
+In the code below, every time an event fires, this function will trigger and save the workspace.  
 
-There are some types of events that we don't need to save after. 
-Whenever the user changes something about the UI by scrolling, zooming, or opening toolbox categories, we don't want to save the workspace because these changes don't actually the data of the workspace. 
-These types of events are called UI Events, so we'll ignore UI events in the `ChangeListener`.
+```js
+// Every time the workspace changes state, save the changes to storage.
+ws.addChangeListener((e) => {
+  save(ws);
+});
+```
+
+This change listener is not yet complete because there are some types of events that we shouldn't save after. 
+UI changes (e.g. scrolling, zooming, or opening toolbox categories) change how the workspace *looks* but don't change the state of the blocks. 
+Because we're only saving the blocks, we won't save after these types of events. 
+These types of events are called UI events, so we'll add a check to ignore UI events in the `ChangeListener`. 
+
+Here's the full code:
 
 ```js
 // Every time the workspace changes state, save the changes to storage.
@@ -89,4 +98,5 @@ ws.addChangeListener((e) => {
 To learn more about the events stream, see the [Events documentation](/guides/configure/events/).
 
 ### Testing the changes
+
 Now, test the code. Add some blocks, then reload the page. The workspace should still contain the blocks you added.

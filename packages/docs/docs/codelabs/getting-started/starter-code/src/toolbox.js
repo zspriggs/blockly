@@ -17,21 +17,11 @@ export const toolbox = {
     },
     {
       kind: 'block',
-      type: 'add_text',
-      inputs: {
-        TEXT: {
-          shadow: {
-            type: 'text',
-            fields: {
-              TEXT: 'abc',
-            },
-          },
-        },
-      },
+      type: 'text',
     },
     {
       kind: 'block',
-      type: 'text',
+      type: 'add_text',
     },
   ]
 };
