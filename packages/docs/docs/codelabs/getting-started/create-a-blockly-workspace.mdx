@@ -14,23 +14,24 @@ In this section you will learn how to add a workspace to your app, including how
 
 A Blockly workspace has two main components:
 
-- The area where the user assembles their blocks (the white area).
 - A toolbox that contains all blocks that are available to the user (the grey area).
+- The area where the user assembles their blocks (the white area).  
 
-TODO: change image and fix alt
 <Image
-  src="/images/codelabs/getting-started/d4_three_times.png"
-  alt="A Blockly workspace with two blocks"
+  src="/images/codelabs/getting-started/workspace_with_toolbox.png"
+  alt="A Blockly toolbox and workspace with three connected blocks in the workspace."
   className="codelabImage"
-/>
+/>   
 
 Users can drag blocks out of the toolbox and into their workspace to assemble a program. 
 
-The toolbox may be organized into categories, and may contain both single blocks or groups of blocks. A well-organized toolbox helps the user to explore the available blocks and understand the capabilities of the underlying system.
+The toolbox may be organized into categories (a *category* toolbox) or have all blocks visible at all times (a *flyout* toolbox). Toolboxes may contain both single blocks or groups of blocks. 
+A well-organized toolbox helps the user to explore the available blocks and understand the capabilities of the underlying system.
 
 A toolbox is defined as a JavaScript object and passed into the workspace constructor through an options struct.
 
-For more information on this JSON format and toolbox configuration, including category creation, please see our <a href="/guides/configure/toolboxes/toolbox">toolbox documentation</a>.
+For more information on this JSON format and toolbox configuration, including category creation, please see our [toolbox documentation](/guides/configure/toolboxes/toolbox).
+If you'd like to customize the appearance of your toolbox, you can consult the [toolbox customization codelab](/codelabs/custom-toolbox/codelab-overview/).
 
 ### Define the toolbox
 
@@ -64,7 +65,7 @@ export const toolbox = {
 };
 ```
 
-This JavaScript object defines a toolbox with a "repeat loop" block and a "text" block. 
+This JavaScript object defines a flyout toolbox with a "repeat loop" block and a "text" block. 
 
 ### Injection
 
@@ -115,7 +116,7 @@ For example:
 - `toolboxPosition`: Whether to show the toolbox at the top or bottom of the workspace.
 - `maxBlocks`: The maximum number of blocks that may be created in the workspace. 
 
-You can also pass options to set Blockly's theme, modify scrolling behaviour, set the renderer, and more. For more information, head over to Blockly's developer site and check out the [configuration](/guides/configure/configuration_struct#the-options-dictionary) section.
+You can also pass options to set Blockly's theme, modify scrolling behaviour, set the renderer, and more. For more information, see the [configuration](/guides/configure/configuration_struct#the-options-dictionary) documentation.
 
 ### Check your work
 
@@ -123,5 +124,8 @@ Make sure that all the files you've added code to (`index.html`, `toolbox.js`, a
 
 You should now see your Blockly workspace.
 
-TODO: add the screenshot. 
-workspace_with_toolbox
+<Image
+  src="/images/codelabs/getting-started/full_page_first_toolbox.png"
+  alt="A webpage with a space for generated code, a Blockly toolbox with two blocks in it, and a Blockly workspace."
+  className="codelabImage"
+/>   

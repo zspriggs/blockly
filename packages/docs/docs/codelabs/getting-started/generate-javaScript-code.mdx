@@ -25,10 +25,11 @@ When Blockly generates JavaScript code for blocks in a workspace, it translates 
 
 Find the `javascript.js` file in `src/generators/`. This is where you will tell Blockly's JavaScript generator how to generate code for the add text block. 
 
-The block generator for `add_text`, will first recursively generate the code for the input `'TEXT'`. 
-Then, it provides the function that will add the text to the output area. Finally, it creates the function call that will be generated for this block. 
+The block generator for `add_text` will first recursively generate the code for the input `TEXT`. 
+Then, it provides the function that will add text to the output area. Finally, it creates the function call that will be generated for this block. 
 
 Add the following code to the bottom of `src/generators/javascript.js`:
+
 ```js
 import {Order} from 'blockly/javascript';
 
@@ -55,14 +56,11 @@ forBlock['add_text'] = function (block, generator) {
 };
 ```
 
-The code that this generates is a JavaScript function which adds text to the output area. 
+With this translation function, the `add_text` block with a string input of "Hello, World!":
 
-With this translation function, the following `add_text` block with a string input:
-
-TODO: update image!!
 <Image
-  src="/images/codelabs/getting-started/play_sound_block.png"
-  alt="image"
+  src="/images/codelabs/getting-started/add_text_block.png"
+  alt=""
   className="codelabImage"
 />
 
@@ -77,7 +75,7 @@ addText(text) {
   outputDiv.appendChild(textEl);
 };
 
-addText("Hello, world!");
+addText("Hello, World!");
 ```
 
 For more information on block generators, read the [generating code](/guides/create-custom-blocks/code-generation/overview#block-code-generators) page on the developer site.

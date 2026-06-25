@@ -480,6 +480,11 @@ const sidebars = {
               href: '/codelabs/getting-started/codelab-overview',
             },
             {
+              type: 'doc',
+              label: 'Blockly Sample App',
+              id: 'guides/get-started/sample-app-overview',
+            },
+            {
               type: 'link',
               label: 'Blockly Playground',
               href: 'https://blockly-demo.appspot.com/static/tests/playground.html',
