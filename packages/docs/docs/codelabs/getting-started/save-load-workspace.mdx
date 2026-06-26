@@ -69,9 +69,12 @@ import {save, load} from './serialization';
 ```
 
 Now, you'll add a change listener at the bottom of `index.js` to listen to the event stream. 
-In the code below, every time an event fires, this function will trigger and save the workspace.  
+You'll also add a call to `load` outside of the change listener, so that your app finds the saved blocks on initial load.  
+In the code below, every time an event fires, this change listener will trigger and save the workspace.  
 
 ```js
+load(ws);
+
 // Every time the workspace changes state, save the changes to storage.
 ws.addChangeListener((e) => {
   save(ws);
@@ -82,9 +85,11 @@ This change listener is not yet complete, since there are some types of events t
 UI changes (e.g. scrolling, zooming, or opening toolbox categories) change how the workspace *looks* but don't change the state of the blocks. 
 Since we're only saving the blocks, we won't save after these types of events. 
 
-Here's the full change listener code:
+Here's the full change listener code, including the call to `load` outside of the change listener:
 
 ```js
+load(ws);
+
 // Every time the workspace changes state, save the changes to storage.
 ws.addChangeListener((e) => {
   // UI events are things like scrolling, zooming, etc.

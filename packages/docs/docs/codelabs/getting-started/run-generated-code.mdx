@@ -64,9 +64,11 @@ const runCode = () => {
 ### Run the code
 
 Now, we need to actually call this `runCode` function. 
-First, consider the scenario when your app is first loading up. You'll want load in any saved data (if it exists) and run the code automatically. 
+First, consider the scenario when your app is first loading up. After loading in the saved data, you'll also run the code automatically. 
 
-Add the following lines of code to `index.js` beneath your `runCode` function:
+Add a call to `runCode` just after your call to `load`. 
+
+Now your `index.js` file should have:
 
 ```js
 // Load the initial state from storage and run the code.

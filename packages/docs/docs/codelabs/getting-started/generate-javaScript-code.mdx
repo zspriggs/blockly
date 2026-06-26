@@ -67,15 +67,15 @@ With this translation function, the `add_text` block with a string input of "Hel
 translates into the JavaScript code:
 
 ```javascript
-addText(text) {
+function addText(text) {
   // Add text to the output area.
   const outputDiv = document.getElementById('output');
   const textEl = document.createElement('p');
   textEl.innerText = text;
   outputDiv.appendChild(textEl);
-};
+}
 
-addText("Hello, World!");
+addText('Hello, World!');
 ```
 
 For more information on block generators, read the [generating code](/guides/create-custom-blocks/code-generation/overview#block-code-generators) page on the developer site.
