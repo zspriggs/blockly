@@ -9,3 +9,4 @@ build-debug.log
 *.komodoproject
 /nbproject/private/
 tsdoc-metadata.json
+.vscode
