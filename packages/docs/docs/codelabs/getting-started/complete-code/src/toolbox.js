@@ -23,5 +23,5 @@ export const toolbox = {
       kind: 'block',
       type: 'add_text',
     },
-  ]
+  ],
 };
