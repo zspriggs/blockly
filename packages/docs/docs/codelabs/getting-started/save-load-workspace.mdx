@@ -7,7 +7,7 @@ description: How to save and load your workspace.
 ## 7. Save/load workspace
 
 You now have a Blockly workspace. However, if you reload the page, you'll find that any blocks you've dragged into the workspace will disappear.
-Your users likely won't want their blocks to vanish, so let's save the state of the workspace in local browser storage. 
+Your users likely won't want their blocks to vanish, but you can fix this by saving the state of the workspace in local browser storage. 
 
 ### Add the save method
 
@@ -32,9 +32,9 @@ export const save = function (workspace) {
 
 ### Add the load method
 
-When a user opens or reloads the page, the blocks in local storage should be loaded back into the workspace. 
+When a user opens or reloads the page, the blocks in local storage should be loaded back into the workspace. The following `load` function handles this by checking for items in local storage and loading them into the workspace. 
 
-In the `serialization.js` file, add the following `load` function. `load` checks for items in local storage and loads them into the workspace.
+In the `serialization.js` file, add this code: 
 
 ```js
 /**
@@ -78,10 +78,9 @@ ws.addChangeListener((e) => {
 });
 ```
 
-This change listener is not yet complete because there are some types of events that we shouldn't save after. 
+This change listener is not yet complete, since there are some types of events that you shouldn't save after. 
 UI changes (e.g. scrolling, zooming, or opening toolbox categories) change how the workspace *looks* but don't change the state of the blocks. 
-Because we're only saving the blocks, we won't save after these types of events. 
-These types of events are called UI events, so we'll add a check to ignore UI events in the change listener. 
+Since we're only saving the blocks, we won't save after these types of events. 
 
 Here's the full change listener code:
 

@@ -8,8 +8,7 @@ import Image from '@site/src/components/Image';
 
 ## 9. Run generated code
 
-Now you have the block generator to make code for the `add_text` block, but the block generator must be registered and used for you to see or run your code.
-In the following steps, you'll add logic to display the generated code and automatically run it. 
+Now you have the block generator to make code for the `add_text` block. In the following steps, you'll add logic to display the generated code and automatically run it. 
 
 Add the following imports to the `index.js` file:
 ```js
@@ -52,7 +51,13 @@ const runCode = () => {
 
   outputDiv.innerHTML = '';
 
-  eval(code);
+  // Wrap `eval` in a `try/catch` so that any runtime errors are 
+  // logged to the console, instead of failing quietly.
+  try {
+    eval(code);
+  } catch (error) {
+    console.log(error);
+  }
 };
 ```
 
@@ -96,17 +101,6 @@ ws.addChangeListener((e) => {
   runCode();
 });
 ```
-
-{/* TODO: add a try catch to sample app? this would be good!!!!!!
-Finally, execute the script with the `eval` function. Wrap it in a `try/catch` so that any runtime errors are logged to the console, instead of failing quietly:
-
-```js
-try {
-  eval(code);
-} catch (error) {
-  console.log(error);
-}
-``` */}
 
 ### A note on eval
 

@@ -51,7 +51,7 @@ const sidebars = {
         },
         {
           type: 'doc',
-          label: '4. Add basic HTML and CS',
+          label: '4. Add basic HTML and CSS',
           id: 'codelabs/getting-started/create-base-app',
         },
         {
