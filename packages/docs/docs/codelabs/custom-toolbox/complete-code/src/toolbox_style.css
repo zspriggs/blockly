@@ -16,6 +16,7 @@
 .customIcon {
   color: #fff;
 }
+
 /* Stacks the icon on top of the label. */
 .blocklyTreeRowContentContainer {
   display: flex;
@@ -24,4 +25,8 @@
 }
 .blocklyToolboxCategory {
   height: initial;
+}
+
+.customLabel {
+  font-weight: bold;
 }

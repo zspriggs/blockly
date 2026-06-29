@@ -1,13 +1,4 @@
-/**
- * @license
- * Copyright 2020 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
-/**
- * @fileoverview The toolbox category built during the custom toolbox codelab, in es6.
- * @author aschmiedt@google.com (Abby Schmiedt)
- */
+import * as Blockly from 'blockly';
 
 class CustomCategory extends Blockly.ToolboxCategory {
   /**
@@ -34,6 +25,7 @@ class CustomCategory extends Blockly.ToolboxCategory {
    * @override
    */
   setSelected(isSelected) {
+    super.setSelected(isSelected);
     // We do not store the label span on the category, so use getElementsByClassName.
     const labelDom = this.rowDiv_.getElementsByClassName(
       'blocklyToolboxCategoryLabel',
@@ -51,26 +43,13 @@ class CustomCategory extends Blockly.ToolboxCategory {
       labelDom.style.color = 'white';
       this.iconDom_.style.color = 'white';
     }
-    // This is used for accessibility purposes.
-    Blockly.utils.aria.setState(
-      /** @type {!Element} */ (this.htmlDiv_),
-      Blockly.utils.aria.State.SELECTED,
-      isSelected,
-    );
   }
 
-  /**
-   * Creates the dom used for the icon.
-   * @returns {HTMLElement} The element for the icon.
-   * @override
-   */
+  /** @override */
   createIconDom_() {
-    const iconImg = document.createElement('img');
-    iconImg.src = './logo_only.svg';
-    iconImg.alt = 'Blockly Logo';
-    iconImg.width = '25';
-    iconImg.height = '25';
-    return iconImg;
+    const icon = document.createElement('span');
+    icon.textContent = '🧰';
+    return icon;
   }
 }
 

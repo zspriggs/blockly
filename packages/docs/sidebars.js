@@ -102,32 +102,37 @@ const sidebars = {
         },
         {
           type: 'doc',
-          label: '3. Change the look of a category',
+          label: '3. Add a custom category class',
+          id: 'codelabs/custom-toolbox/add-a-custom-category'
+        },
+        {
+          type: 'doc',
+          label: '4. Change the look of a category',
           id: 'codelabs/custom-toolbox/change-the-look-of-a-category',
         },
         {
           type: 'doc',
-          label: '4. Change the look of a selected category',
+          label: '5. Change the look of a selected category',
           id: 'codelabs/custom-toolbox/change-the-look-of-a-selected-category',
         },
         {
           type: 'doc',
-          label: '5. Add an icon to your category',
+          label: '6. Add an icon to your category',
           id: 'codelabs/custom-toolbox/add-an-icon-to-your-category',
         },
         {
           type: 'doc',
-          label: '6. Change the category HTML',
+          label: '7. Change the category HTML',
           id: 'codelabs/custom-toolbox/change-the-category-HTML',
         },
         {
           type: 'doc',
-          label: '7. Adding a custom toolbox item',
+          label: '8. Adding a custom toolbox item',
           id: 'codelabs/custom-toolbox/adding-a-custom-toolbox-item',
         },
         {
           type: 'doc',
-          label: '8. Summary',
+          label: '9. Summary',
           id: 'codelabs/custom-toolbox/summary',
         },
       ],
