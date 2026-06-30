@@ -2,6 +2,8 @@
 description: How to add a callback to a context menu item.
 ---
 
+import Image from '@site/src/components/Image';
+
 # Customizing context menus
 
 ## 7. Callback
@@ -25,8 +27,12 @@ As an example, update the help item's `callback` to add a block to the workspace
 
 ### Test it
 
-- Reload the page and open a context menu on the workspace.
+- Refresh the running page and open a context menu on the workspace.
 - Select the **Help** option.
 - A text block should appear in the top left of the workspace.
 
-![A text block containing the text "Now there is a block".](../../../static/images/codelabs/context-menu-option/there_is_a_block.png)
+<Image
+  src="/images/codelabs/context-menu-option/there_is_a_block.png"
+  alt='A text block containing the text "Now there is a block".'
+  className="codelabImage"
+/>
