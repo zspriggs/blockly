@@ -250,17 +250,22 @@ const sidebars = {
         },
         {
           type: 'doc',
-          label: '3. Validating blocks',
+          label: '3. Create a block to validate',
+          id: 'codelabs/validation-and-warnings/creating-the-block',
+        },
+        {
+          type: 'doc',
+          label: '4. Validating blocks',
           id: 'codelabs/validation-and-warnings/validating-blocks',
         },
         {
           type: 'doc',
-          label: '4. Displaying warnings',
+          label: '5. Displaying warnings',
           id: 'codelabs/validation-and-warnings/displaying-warnings',
         },
         {
           type: 'doc',
-          label: '5. Summary',
+          label: '6. Summary',
           id: 'codelabs/validation-and-warnings/summary',
         },
       ],
