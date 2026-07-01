@@ -9,12 +9,11 @@ description: Styling Blockly components with CSS
 
 In this section, you will create CSS rules to assign the colours used by the [components section](/codelabs/theme-extension-identifier/customize-components) of the themes codelab to various components.
 
-To start, create a file named `halloween.css` and add it to your `index.html` file:
+To start, create a file in the `src/` folder named `halloween.css` and import it in `src/index.js`, after the existing `index.css` import:
 
-```html
-...
-<script src="./index.js"></script>
-<link rel="stylesheet" href="halloween.css" />
+```js
+import './index.css';
+import './halloween.css';
 ```
 
 ### Main workspace colour

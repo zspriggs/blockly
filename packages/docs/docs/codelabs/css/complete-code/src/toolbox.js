@@ -1,59 +1,67 @@
-const toolboxCategories = {
+/**
+ * @license
+ * Copyright 2023 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/*
+This toolbox contains nearly every single built-in block that Blockly offers,
+in addition to the custom block 'add_text' this sample app adds.
+You probably don't need every single block, and should consider either rewriting
+your toolbox from scratch, or carefully choosing whether you need each block
+listed here.
+*/
+
+export const toolbox = {
   kind: 'categoryToolbox',
   contents: [
     {
       kind: 'category',
       name: 'Logic',
-      categorystyle: 'logic_category',
+      cssConfig: {
+        row: 'blocklyToolboxCategory logic_category',
+      },
       contents: [
         {
+          kind: 'block',
           type: 'controls_if',
-          kind: 'block',
         },
         {
+          kind: 'block',
           type: 'logic_compare',
-          kind: 'block',
-          fields: {
-            OP: 'EQ',
-          },
         },
         {
+          kind: 'block',
           type: 'logic_operation',
-          kind: 'block',
-          fields: {
-            OP: 'AND',
-          },
         },
         {
+          kind: 'block',
           type: 'logic_negate',
-          kind: 'block',
         },
         {
+          kind: 'block',
           type: 'logic_boolean',
-          kind: 'block',
-          fields: {
-            BOOL: 'TRUE',
-          },
         },
         {
+          kind: 'block',
           type: 'logic_null',
-          kind: 'block',
-          enabled: false,
         },
         {
-          type: 'logic_ternary',
           kind: 'block',
+          type: 'logic_ternary',
         },
       ],
     },
     {
       kind: 'category',
       name: 'Loops',
-      categorystyle: 'loop_category',
+      cssConfig: {
+        row: 'blocklyToolboxCategory loop_category',
+      },
       contents: [
         {
-          type: 'controls_repeat_ext',
           kind: 'block',
+          type: 'controls_repeat_ext',
           inputs: {
             TIMES: {
               shadow: {
@@ -66,28 +74,12 @@ const toolboxCategories = {
           },
         },
         {
-          type: 'controls_repeat',
           kind: 'block',
-          enabled: false,
-          fields: {
-            TIMES: 10,
-          },
-        },
-        {
           type: 'controls_whileUntil',
-          kind: 'block',
-          fields: {
-            MODE: 'WHILE',
-          },
         },
         {
-          type: 'controls_for',
           kind: 'block',
-          fields: {
-            VAR: {
-              name: 'i',
-            },
-          },
+          type: 'controls_for',
           inputs: {
             FROM: {
               shadow: {
@@ -116,42 +108,32 @@ const toolboxCategories = {
           },
         },
         {
-          type: 'controls_forEach',
           kind: 'block',
-          fields: {
-            VAR: {
-              name: 'j',
-            },
-          },
+          type: 'controls_forEach',
         },
         {
-          type: 'controls_flow_statements',
           kind: 'block',
-          enabled: false,
-          fields: {
-            FLOW: 'BREAK',
-          },
+          type: 'controls_flow_statements',
         },
       ],
     },
     {
       kind: 'category',
       name: 'Math',
-      categorystyle: 'math_category',
+      cssConfig: {
+        row: 'blocklyToolboxCategory math_category',
+      },
       contents: [
         {
-          type: 'math_number',
           kind: 'block',
+          type: 'math_number',
           fields: {
             NUM: 123,
           },
         },
         {
-          type: 'math_arithmetic',
           kind: 'block',
-          fields: {
-            OP: 'ADD',
-          },
+          type: 'math_arithmetic',
           inputs: {
             A: {
               shadow: {
@@ -172,11 +154,8 @@ const toolboxCategories = {
           },
         },
         {
-          type: 'math_single',
           kind: 'block',
-          fields: {
-            OP: 'ROOT',
-          },
+          type: 'math_single',
           inputs: {
             NUM: {
               shadow: {
@@ -189,11 +168,8 @@ const toolboxCategories = {
           },
         },
         {
-          type: 'math_trig',
           kind: 'block',
-          fields: {
-            OP: 'SIN',
-          },
+          type: 'math_trig',
           inputs: {
             NUM: {
               shadow: {
@@ -206,18 +182,12 @@ const toolboxCategories = {
           },
         },
         {
-          type: 'math_constant',
           kind: 'block',
-          fields: {
-            CONSTANT: 'PI',
-          },
+          type: 'math_constant',
         },
         {
-          type: 'math_number_property',
           kind: 'block',
-          fields: {
-            PROPERTY: 'EVEN',
-          },
+          type: 'math_number_property',
           inputs: {
             NUMBER_TO_CHECK: {
               shadow: {
@@ -230,8 +200,8 @@ const toolboxCategories = {
           },
         },
         {
-          type: 'math_round',
           kind: 'block',
+          type: 'math_round',
           fields: {
             OP: 'ROUND',
           },
@@ -247,15 +217,15 @@ const toolboxCategories = {
           },
         },
         {
-          type: 'math_on_list',
           kind: 'block',
+          type: 'math_on_list',
           fields: {
             OP: 'SUM',
           },
         },
         {
-          type: 'math_modulo',
           kind: 'block',
+          type: 'math_modulo',
           inputs: {
             DIVIDEND: {
               shadow: {
@@ -276,8 +246,8 @@ const toolboxCategories = {
           },
         },
         {
-          type: 'math_constrain',
           kind: 'block',
+          type: 'math_constrain',
           inputs: {
             VALUE: {
               shadow: {
@@ -306,8 +276,8 @@ const toolboxCategories = {
           },
         },
         {
-          type: 'math_random_int',
           kind: 'block',
+          type: 'math_random_int',
           inputs: {
             FROM: {
               shadow: {
@@ -328,12 +298,12 @@ const toolboxCategories = {
           },
         },
         {
-          type: 'math_random_float',
           kind: 'block',
+          type: 'math_random_float',
         },
         {
-          type: 'math_atan2',
           kind: 'block',
+          type: 'math_atan2',
           inputs: {
             X: {
               shadow: {
@@ -358,25 +328,21 @@ const toolboxCategories = {
     {
       kind: 'category',
       name: 'Text',
-      categorystyle: 'text_category',
+      cssConfig: {
+        row: 'blocklyToolboxCategory text_category',
+      },
       contents: [
         {
+          kind: 'block',
           type: 'text',
-          kind: 'block',
-          fields: {
-            TEXT: '',
-          },
         },
         {
+          kind: 'block',
           type: 'text_join',
-          kind: 'block',
         },
         {
-          type: 'text_append',
           kind: 'block',
-          fields: {
-            name: 'item',
-          },
+          type: 'text_append',
           inputs: {
             TEXT: {
               shadow: {
@@ -389,8 +355,8 @@ const toolboxCategories = {
           },
         },
         {
-          type: 'text_length',
           kind: 'block',
+          type: 'text_length',
           inputs: {
             VALUE: {
               shadow: {
@@ -403,8 +369,8 @@ const toolboxCategories = {
           },
         },
         {
-          type: 'text_isEmpty',
           kind: 'block',
+          type: 'text_isEmpty',
           inputs: {
             VALUE: {
               shadow: {
@@ -417,20 +383,12 @@ const toolboxCategories = {
           },
         },
         {
-          type: 'text_indexOf',
           kind: 'block',
-          fields: {
-            END: 'FIRST',
-          },
+          type: 'text_indexOf',
           inputs: {
             VALUE: {
               block: {
                 type: 'variables_get',
-                fields: {
-                  VAR: {
-                    name: 'text',
-                  },
-                },
               },
             },
             FIND: {
@@ -444,50 +402,30 @@ const toolboxCategories = {
           },
         },
         {
-          type: 'text_charAt',
           kind: 'block',
-          fields: {
-            WHERE: 'FROM_START',
-          },
+          type: 'text_charAt',
           inputs: {
             VALUE: {
               block: {
                 type: 'variables_get',
-                fields: {
-                  VAR: {
-                    name: 'text',
-                  },
-                },
               },
             },
           },
         },
         {
-          type: 'text_getSubstring',
           kind: 'block',
-          fields: {
-            WHERE1: 'FROM_START',
-            WHERE2: 'FROM_START',
-          },
+          type: 'text_getSubstring',
           inputs: {
             STRING: {
               block: {
                 type: 'variables_get',
-                fields: {
-                  VAR: {
-                    name: 'text',
-                  },
-                },
               },
             },
           },
         },
         {
+          kind: 'block',
           type: 'text_changeCase',
-          kind: 'block',
-          fields: {
-            CASE: 'UPPERCASE',
-          },
           inputs: {
             TEXT: {
               shadow: {
@@ -500,11 +438,8 @@ const toolboxCategories = {
           },
         },
         {
+          kind: 'block',
           type: 'text_trim',
-          kind: 'block',
-          fields: {
-            MODE: 'BOTH',
-          },
           inputs: {
             TEXT: {
               shadow: {
@@ -517,92 +452,56 @@ const toolboxCategories = {
           },
         },
         {
-          type: 'text_count',
           kind: 'block',
+          type: 'text_count',
           inputs: {
             SUB: {
               shadow: {
                 type: 'text',
-                fields: {
-                  TEXT: '',
-                },
               },
             },
             TEXT: {
               shadow: {
                 type: 'text',
-                fields: {
-                  TEXT: '',
-                },
               },
             },
           },
         },
         {
-          type: 'text_replace',
           kind: 'block',
+          type: 'text_replace',
           inputs: {
             FROM: {
               shadow: {
                 type: 'text',
-                fields: {
-                  TEXT: '',
-                },
               },
             },
             TO: {
               shadow: {
                 type: 'text',
-                fields: {
-                  TEXT: '',
-                },
               },
             },
             TEXT: {
               shadow: {
                 type: 'text',
-                fields: {
-                  TEXT: '',
-                },
               },
             },
           },
         },
         {
+          kind: 'block',
           type: 'text_reverse',
-          kind: 'block',
           inputs: {
             TEXT: {
               shadow: {
                 type: 'text',
-                fields: {
-                  TEXT: '',
-                },
-              },
-            },
-          },
-        },
-
-        {
-          type: 'text_print',
-          kind: 'block',
-          inputs: {
-            TEXT: {
-              shadow: {
-                type: 'text',
-                fields: {
-                  TEXT: 'abc',
-                },
               },
             },
           },
         },
         {
-          type: 'text_prompt_ext',
           kind: 'block',
-          fields: {
-            TYPE: 'TEXT',
-          },
+          type: 'add_text',
           inputs: {
             TEXT: {
               shadow: {
@@ -619,22 +518,21 @@ const toolboxCategories = {
     {
       kind: 'category',
       name: 'Lists',
-      categorystyle: 'list_category',
+      cssConfig: {
+        row: 'blocklyToolboxCategory list_category',
+      },
       contents: [
         {
-          type: 'lists_create_with',
           kind: 'block',
-          extraState: {
-            itemCount: 0,
-          },
+          type: 'lists_create_with',
         },
         {
-          type: 'lists_create_with',
           kind: 'block',
+          type: 'lists_create_with',
         },
         {
+          kind: 'block',
           type: 'lists_repeat',
-          kind: 'block',
           inputs: {
             NUM: {
               shadow: {
@@ -647,100 +545,60 @@ const toolboxCategories = {
           },
         },
         {
+          kind: 'block',
           type: 'lists_length',
-          kind: 'block',
         },
         {
+          kind: 'block',
           type: 'lists_isEmpty',
-          kind: 'block',
         },
         {
+          kind: 'block',
           type: 'lists_indexOf',
-          kind: 'block',
-
-          fields: {
-            END: 'FIRST',
-          },
           inputs: {
             VALUE: {
               block: {
                 type: 'variables_get',
-                fields: {
-                  VAR: {
-                    name: 'list',
-                  },
-                },
               },
             },
           },
         },
         {
+          kind: 'block',
           type: 'lists_getIndex',
-          kind: 'block',
-          fields: {
-            MODE: 'GET',
-            WHERE: 'FROM_START',
-          },
           inputs: {
             VALUE: {
               block: {
                 type: 'variables_get',
-                fields: {
-                  VAR: {
-                    name: 'list',
-                  },
-                },
               },
             },
           },
         },
         {
+          kind: 'block',
           type: 'lists_setIndex',
-          kind: 'block',
-          fields: {
-            MODE: 'SET',
-            WHERE: 'FROM_START',
-          },
           inputs: {
             LIST: {
               block: {
                 type: 'variables_get',
-                fields: {
-                  VAR: {
-                    name: 'list',
-                  },
-                },
               },
             },
           },
         },
         {
+          kind: 'block',
           type: 'lists_getSublist',
-          kind: 'block',
-          fields: {
-            WHERE1: 'FROM_START',
-            WHERE2: 'FROM_START',
-          },
           inputs: {
             LIST: {
               block: {
                 type: 'variables_get',
-                fields: {
-                  VAR: {
-                    name: 'list',
-                  },
-                },
               },
             },
           },
         },
         {
-          type: 'lists_split',
           kind: 'block',
-
-          fields: {
-            MODE: 'SPLIT',
-          },
+          type: 'lists_split',
           inputs: {
             DELIM: {
               shadow: {
@@ -753,17 +611,12 @@ const toolboxCategories = {
           },
         },
         {
-          type: 'lists_sort',
           kind: 'block',
-
-          fields: {
-            TYPE: 'NUMERIC',
-            DIRECTION: '1',
-          },
+          type: 'lists_sort',
         },
         {
-          type: 'lists_reverse',
           kind: 'block',
+          type: 'lists_reverse',
         },
       ],
     },
@@ -773,14 +626,18 @@ const toolboxCategories = {
     {
       kind: 'category',
       name: 'Variables',
+      cssConfig: {
+        row: 'blocklyToolboxCategory variable_category',
+      },
       custom: 'VARIABLE',
-      categorystyle: 'variable_category',
     },
     {
       kind: 'category',
       name: 'Functions',
+      cssConfig: {
+        row: 'blocklyToolboxCategory procedure_category',
+      },
       custom: 'PROCEDURE',
-      categorystyle: 'procedure_category',
     },
   ],
 };
