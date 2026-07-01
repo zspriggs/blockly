@@ -2,6 +2,7 @@
 title: Use CSS in Blockly - Components
 description: Styling Blockly components with CSS
 ---
+import Image from '@site/src/components/Image';
 
 # Use CSS in Blockly
 
@@ -43,7 +44,16 @@ This seems like a good target for your rule, except that the `fill` property is 
 
 Refresh your page and notice that the workspace background is now orange:
 
-![A Blockly editor with an orange workspace.](../../../static/images/codelabs/css/components-workspace.png)
+<Image
+  src="/images/codelabs/css/components-workspace.png"
+  alt="The Blockly sample app, now with an orange background on the Blockly workspace."
+  className="codelabImage"
+/>
+
+:::note
+The visual changes in this codelab will not affect the appearance of the code generation or code output panes, 
+since they are not part of Blockly's workspace. To change the appearance of these panes, you can modify `index.css`.
+:::
 
 ### Mutator workspace colour
 
@@ -76,7 +86,12 @@ Next, add a CSS rule to set the workspace's background colour:
 To see your new colours, reload the web page, drag the `if do` block out again,
 and reopen the mutator. You should see that the mutator workspace background
 colour is orange, matching the main workspace background:
-![An 'if do' block with a mutator that has an orange background.](../../../static/images/codelabs/css/components-mutator.png)
+
+<Image
+  src="/images/codelabs/css/components-mutator.png"
+  alt="An 'if do' block with a mutator that has an orange background."
+  className="codelabImage"
+/>
 
 ### Other component colours
 
@@ -128,9 +143,12 @@ Add the following rules to `halloween.css`:
 }
 ```
 
-Now reload your page. You should see a Blockly editor with a yellow toolbox and
-red scrollbars:
-![A Blockly editor with Halloween colors.](../../../static/images/codelabs/css/components-halloween.png)
+Now reload your page. You should now see a yellow toolbox and red scrollbars:
+<Image
+  src="/images/codelabs/css/components-halloween.png"
+  alt="A Blockly editor with Halloween colors: a yellow toolbox, orange workspace, and red scrollbars."
+  className="codelabImage"
+/>
 
 ### fill vs background-color
 
