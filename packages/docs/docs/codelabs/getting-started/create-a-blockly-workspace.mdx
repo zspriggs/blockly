@@ -84,12 +84,9 @@ For this codelab we will inject into a div with the id `"blocklyDiv"`, which was
 
 ### Create the workspace
 
-Now add code to inject the Blockly editor in `src/index.js`. Since npm has already installed Blockly, we can import Blockly using:
-```js
-import * as Blockly from 'blockly';
-``` 
-
-You'll also import the toolbox you just created, and make variables for each major div in `index.html`. Finally, you'll inject Blockly using the toolbox you just created. 
+Now, in `src/index.js`, import the toolbox you just created. 
+Then, set up variables for each major div in `index.html` so that you can later reference these UI elements.
+Finally, you'll inject Blockly using the toolbox you just created. 
 
 Copy and paste the full code into your `index.js`: 
 ```js
@@ -111,18 +108,22 @@ In this case, the only configuration option you selected was `toolbox` which let
 The `options` struct offers many additional options which give you significant control over your Blockly's instance.
 
 For example: 
-- `scrollbars`: Whether to show scrollbars in the workspace.
-- `horizontalLayout`: Whether to display the toolbox horizontally or vertically in the workspace.
-- `toolboxPosition`: Whether to show the toolbox at the top or bottom of the workspace.
+- `scrollbars`: Whether to show scrollbars in the workspace. If a toolbox is a flyout toolbox (like the one you just defined), `scrollbars` defaults to `false`. 
+- `horizontalLayout`: Whether to display the toolbox horizontally (`true`) or vertically (`false`) in the workspace. Defaults to `false`/vertical. 
+- `toolboxPosition`: Controls the position of the toolbox in the workspace. It defaults to the left side if the layout is vertical. 
 - `maxBlocks`: The maximum number of blocks that may be created in the workspace. 
 
-You can also pass options to set Blockly's theme, modify scrolling behaviour, set the renderer, and more. For more information, see the [configuration](/guides/configure/configuration_struct#the-options-dictionary) documentation.
+There are more options available which can change the appearance or behavior of Blockly. For a list of all the available options, see the [configuration](/guides/configure/configuration_struct#the-options-dictionary) documentation.
 
 ### Check your work
 
 Make sure that all the files you've added code to (`index.html`, `toolbox.js`, and `index.js`) are saved. You may also need to refresh your `localhost` page. 
 
-You should now see your Blockly workspace.
+You should now see your Blockly workspace. Click on one of the blocks in the toolbox and drag it into the workspace, then let go. You've just added your first block to the workspace!
+
+:::tip
+Blockly is keyboard navigable. Check out the [keyboard navigation guide](/guides/configure/keyboard-nav/#try-it), then try to add another block without using your mouse.
+:::
 
 <Image
   src="/images/codelabs/getting-started/full_page_first_toolbox.png"

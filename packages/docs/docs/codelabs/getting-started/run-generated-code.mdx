@@ -8,33 +8,12 @@ import Image from '@site/src/components/Image';
 
 ## 9. Run generated code
 
-Now you have the block generator to make code for the `add_text` block. In the following steps, you'll add logic to display the generated code and automatically run it. 
+Executing generated code is always the responsibility of the application. 
+Blockly turns blocks into code, and what you do with that code is up to you. 
 
-Add the following imports to the `index.js` file:
-```js
-import {forBlock} from './generators/javascript';
-import {javascriptGenerator} from 'blockly/javascript';
-```
+For this codelab, you'll display the generated code and use `eval` to run it. Then you'll show the output beneath the code. 
 
-The `index.js` file should now have 7 total import statements: 
-```js
-import * as Blockly from 'blockly';
-import {blocks} from './blocks/text';
-import {forBlock} from './generators/javascript';
-import {javascriptGenerator} from 'blockly/javascript';
-import {save, load} from './serialization';
-import {toolbox} from './toolbox';
-import './index.css';
-```
-
-Now you can add the `forBlock` for `add_text` into Blockly's javascriptGenerator so that Blockly can generate the code for your block.
-Put the following line of code into `index.js`, just below ```Blockly.common.defineBlocks(blocks);```
-
-```js
-Object.assign(javascriptGenerator.forBlock, forBlock);
-```
-
-### Write the function
+### Set up the code execution
 
 The `runCode` function uses Blockly's javascriptGenerator to generate the code for the blocks on the workspace. 
 Then it displays the code in the codeDiv, resets the outputDiv, and evaluates the JavaScript code. 

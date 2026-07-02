@@ -35,5 +35,28 @@ Copy and paste the following HTML into your `index.html` file.
 
 The css for the app is already included in the `index.css` file. This codelab includes basic styling for the webpage. 
 
-If you would like to change the theme of Blockly, you can check out the [customizing your themes codelab](/codelabs/theme-extension-identifier/codelab-overview/). 
+If you would like to change the appearance of Blockly's toolbox and workspace, you can check out the [customizing your themes codelab](/codelabs/theme-extension-identifier/codelab-overview/). 
 For more fine-grained styling of components and blocks, you can consult the [CSS codelab](/codelabs/css/codelab-overview/). 
+
+### Import Blockly
+
+At various points throughout this codelab, you'll have to import Blockly in different ways. 
+Since you already installed Blockly using npm, you can freely import Blockly into your files without an additional step. 
+Add the following import statement to `index.js`:
+
+```js
+import * as Blockly from 'blockly';
+``` 
+
+Importing Blockly this way includes the core Blockly library and the builtin blocks. 
+However, sometimes you may only want to import the core Blockly library. In that case, you could import Blockly using:
+
+```js
+import * as Blockly from 'blockly/core';
+```
+
+This codelab will go over generators in the [generate JavaScript code](/codelabs/getting-started/generate-javascript-code) step, but for now just note that generators will need to be imported separately, like so: 
+
+```js
+import {javascriptGenerator} from 'blockly/javascript';
+```

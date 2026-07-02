@@ -8,14 +8,15 @@ import Image from '@site/src/components/Image';
 
 ## 6. Create a custom block
 
-Now, you'll add a custom block to the workspace. 
+Blockly provides various blocks for math, strings, loops, and more. But the real power of a Blockly application comes from your custom blocks. 
+You can define blocks that are related to your application, such as one that plays a song, makes a robot move on the screen, or reports the temperature from a connected sensor.
 
 In Blockly, a _block definition_ describes how a block looks and behaves. This includes its text, colour, and shape. It may also include which other blocks it can connect to.
 
 Blocks can be defined in either JavaScript or JSON. The developer site has a full article on [how to define a block](/guides/create-custom-blocks/define/block-definitions#how-to-create-block-definitions).
 There are also opinionated guides on topics such as [block design](/guides/design/blocks) and [block appearance](/guides/design/appearance) that reflect recommended best practices when creating blocks.
 
-In this codelab we will provide the block definition for you to copy and use.
+In this codelab we will provide a custom block definition for you to copy and use.
 
 ### Define the add_text block
 
@@ -53,7 +54,9 @@ The page on [Block structure in JSON](/guides/create-custom-blocks/define/struct
 
 ### Create Block Definition
 
-After defining the JSON definition for the block, we'll need to create the block definition. 
+After declaring the JSON definition for the block, we'll need to turn it into the full block definition that Blockly can register later. 
+To do that, call `createBlockDefinitionsFromJsonArray` which turns the raw JSON object into the JavaScript block definition that Blockly will use.
+Then, we save that definition as an object called blocks which we will use in the next steps.
 Add the following code to the end of `text.js`, after your `addText` object.
 
 ```js
@@ -73,7 +76,8 @@ The block is set up, now you need to register it. Add the following import state
 import {blocks} from './blocks/text';
 ```
 
-Just after the import statements, insert the following code in `index.js`, which adds your custom block to the list of available blocks: 
+Just after the import statements, insert the following code in `index.js`. 
+This code uses the block definition that we just saved in order to add the custom `add_text` block to the list of available blocks: 
 
 ```js
 Blockly.common.defineBlocks(blocks);
