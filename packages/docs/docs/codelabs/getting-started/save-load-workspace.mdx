@@ -71,6 +71,7 @@ import {save, load} from './serialization';
 
 Now, you'll add a change listener at the bottom of `index.js` to listen to the event stream. 
 You'll also add a call to `load` outside of the change listener, so that your app finds the saved blocks on initial load.  
+
 In the code below, every time an event fires, this change listener will trigger and save the workspace.  
 
 ```js

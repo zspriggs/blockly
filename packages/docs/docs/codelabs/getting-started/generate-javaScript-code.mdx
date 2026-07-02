@@ -12,9 +12,8 @@ Blockly can convert blocks into strings of code in a process called _code genera
 Blocks on their own don't do anything, but we can make them generate code that does, and then execute that code. 
 The code execution step is application-specific and therefore outside of Blockly's scope. It is up to you to determine if, when, and how to execute the strings of code that Blockly generates. 
 
-This is how you get from a list of blocks to a program that does something, like light up an LED display or make a robot move. 
-
-Before you think about how your application will execute code, you first need to generate these strings of code. 
+Code generation and execution is how you get from a list of blocks to a program that *does* something.
+But before you determine how your application will execute code, you first need to tell Blockly how to generate the code. 
 
 In this step, you'll set up code generation for the `add_text` block. 
 
