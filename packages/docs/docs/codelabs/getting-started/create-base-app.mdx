@@ -48,15 +48,11 @@ Add the following import statement to `index.js`:
 import * as Blockly from 'blockly';
 ``` 
 
-Importing Blockly this way includes the core Blockly library and the builtin blocks. 
+Importing Blockly this way includes the core Blockly library, the built-in blocks, and the [English translations](/guides/configure/translations). 
+It also includes some other pieces you need but we won't discuss yet, like the [JavaScript code generator](/codelabs/getting-started/generate-javascript-code).
+
 However, sometimes you may only want to import the core Blockly library. In that case, you could import Blockly using:
 
 ```js
 import * as Blockly from 'blockly/core';
-```
-
-This codelab will go over generators in the [generate JavaScript code](/codelabs/getting-started/generate-javascript-code) step, but for now just note that generators will need to be imported separately, like so: 
-
-```js
-import {javascriptGenerator} from 'blockly/javascript';
 ```
