@@ -103,7 +103,7 @@ const sidebars = {
         {
           type: 'doc',
           label: '3. Add a custom category class',
-          id: 'codelabs/custom-toolbox/add-a-custom-category'
+          id: 'codelabs/custom-toolbox/add-a-custom-category',
         },
         {
           type: 'doc',

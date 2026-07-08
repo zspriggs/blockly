@@ -25,7 +25,7 @@ export const toolbox = {
       kind: 'category',
       name: 'Logic',
       categorystyle: 'logic_category',
-      cssconfig: { icon: 'customIcon fa fa-cog'},
+      cssconfig: { icon: 'customIcon fa fa-cog' },
       contents: [
         {
           kind: 'block',
