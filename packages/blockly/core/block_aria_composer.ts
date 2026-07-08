@@ -6,7 +6,6 @@
 
 import type {BlockSvg} from './block_svg.js';
 import {ConnectionType} from './connection_type.js';
-import {FieldLabel} from './field_label.js';
 import type {Input} from './inputs/input.js';
 import {inputTypes} from './inputs/input_types.js';
 import {
@@ -57,23 +56,18 @@ export enum ConnectionPreposition {
  * @internal
  * @param block The block for which an ARIA representation should be created.
  * @param verbosity How much detail to include in the description.
+ * @param fullBlockFieldLabel An optional override for input labels for full-block fields
  * @returns The ARIA representation for the specified block.
  */
 export function computeAriaLabel(
   block: BlockSvg,
   verbosity = Verbosity.STANDARD,
+  fullBlockFieldLabel: string | undefined = undefined,
 ) {
-  if (block.isSimpleReporter()) {
-    // special case for full-block field blocks.
-    const field = block.getFullBlockField();
-    if (field) {
-      return field.computeAriaLabel(verbosity >= Verbosity.STANDARD);
-    }
-  }
   return [
     verbosity >= Verbosity.STANDARD && getBeginStackLabel(block),
     getParentInputLabel(block),
-    ...getInputLabels(block, verbosity),
+    ...getInputLabels(block, verbosity, fullBlockFieldLabel),
     verbosity === Verbosity.LOQUACIOUS && getParentToolboxCategoryLabel(block),
     verbosity >= Verbosity.STANDARD && getDisabledLabel(block),
     verbosity >= Verbosity.STANDARD && getCollapsedLabel(block),
@@ -93,7 +87,7 @@ export function computeAriaLabel(
  * @param block The block to set ARIA role and roledescription attributes on.
  */
 export function configureAriaRole(block: BlockSvg) {
-  setRole(block.getSvgRoot(), Role.PRESENTATION);
+  setRole(block.getSvgRoot(), Role.NONE);
   const focusableElement = block.getFocusableElement();
   if (!block.isInFlyout) {
     // blocks in the flyout have their role set by the Flyout's block inflater
@@ -143,11 +137,11 @@ export function computeFieldRowLabel(
   const fieldRowLabel = input.fieldRow
     .filter((field) => field.isVisible())
     .flatMap((field, index, visibleFields) => {
-      const isFieldLabel = field instanceof FieldLabel;
+      const isFieldLabel = field.isLabelField();
       if (isFieldLabel) {
         if (
           index < visibleFields.length - 1 &&
-          visibleFields[index + 1] instanceof FieldLabel
+          visibleFields[index + 1].isLabelField()
         ) {
           // Both this item and the next item are FieldLabels. We want to
           // combine these, so we add this one to the list for later handling.
@@ -271,7 +265,7 @@ function getParentInputLabel(block: BlockSvg) {
  * @returns Text indicating that the block begins a stack, or undefined if it
  *     does not.
  */
-function getBeginStackLabel(block: BlockSvg) {
+export function getBeginStackLabel(block: BlockSvg) {
   // Don't include the "begin stack" label for blocks that are moving
   // or blocks in the flyout
   if (block.isInFlyout || block.isDragging()) return undefined;
@@ -295,12 +289,17 @@ function getBeginStackLabel(block: BlockSvg) {
  * @internal
  * @param block The block to retrieve a list of field/input labels for.
  * @param verbosity How much detail to include in each input label.
+ * @param fullBlockFieldLabel An optional override for full-block fields.
  * @returns A list of field/input labels for the given block.
  */
 export function getInputLabels(
   block: BlockSvg,
   verbosity = Verbosity.STANDARD,
+  fullBlockFieldLabel: string | undefined = undefined,
 ): string[] {
+  if (fullBlockFieldLabel) {
+    return [fullBlockFieldLabel];
+  }
   const visibleInputs = block.inputList.filter((input) => input.isVisible());
   let inputsToLabel = visibleInputs;
 
@@ -354,7 +353,7 @@ export function getInputLabels(
  */
 function beginsWithFieldLabel(input: Input): boolean {
   const visibleFields = input.fieldRow.filter((field) => field.isVisible());
-  return visibleFields.length > 0 && visibleFields[0] instanceof FieldLabel;
+  return visibleFields.length > 0 && visibleFields[0].isLabelField();
 }
 
 /**
@@ -372,7 +371,7 @@ function endsWithFieldLabel(input: Input): boolean {
   const visibleFields = input.fieldRow.filter((field) => field.isVisible());
   return (
     visibleFields.length > 0 &&
-    visibleFields[visibleFields.length - 1] instanceof FieldLabel
+    visibleFields[visibleFields.length - 1].isLabelField()
   );
 }
 

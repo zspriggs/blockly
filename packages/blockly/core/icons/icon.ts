@@ -231,6 +231,16 @@ export abstract class Icon implements IIcon, IContextMenu {
   protected recomputeAriaContext(): void {
     const element = this.getFocusableElement();
     if (!element) return;
+    const flyout = (
+      this.sourceBlock.workspace as WorkspaceSvg
+    ).targetWorkspace?.getFlyout();
+    if (flyout && !this.isClickableInFlyout(flyout.autoClose)) {
+      // Icons that can't be used in the flyout are removed from the
+      // accessibility tree, like non-interactive fields.
+      aria.setState(element, aria.State.HIDDEN, true);
+      return;
+    }
+    aria.clearState(element, aria.State.HIDDEN);
     aria.setRole(element, aria.Role.BUTTON);
     const label = this.getAriaLabel() ?? Msg['ICON_LABEL_DEFAULT'];
     aria.setState(element, aria.State.LABEL, label);

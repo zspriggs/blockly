@@ -551,5 +551,112 @@ suite('Number Fields', function () {
       const updatedLabel = this.focusableElement.getAttribute('aria-label');
       assert.isTrue(updatedLabel.includes('1'));
     });
+    test('ARIA label resets after closing editor with invalid input', function () {
+      this.field.setValue(5);
+      this.field.showEditor();
+
+      this.field.htmlInput_.value = 'dog';
+      this.field.onHtmlInputChange(null);
+      assert.equal(this.field.getValue(), 5);
+
+      const labelWhileInvalid =
+        this.focusableElement.getAttribute('aria-label');
+      assert.include(labelWhileInvalid, 'dog');
+
+      Blockly.WidgetDiv.hideIfOwner(this.field);
+
+      const label = this.focusableElement.getAttribute('aria-label');
+      assert.notInclude(label, 'dog');
+      assert.include(label, '5');
+    });
+    suite('Full block fields', function () {
+      setup(function () {
+        this.workspace = Blockly.inject('blocklyDiv', {
+          renderer: 'zelos',
+        });
+        this.block = this.workspace.newBlock('math_number');
+        this.field = this.block.getField('NUM');
+        this.block.initSvg();
+        this.block.render();
+      });
+      teardown(function () {
+        workspaceTeardown.call(this, this.workspace);
+      });
+      test('Top block ARIA label includes "Begin stack" label before expected field label', function () {
+        const labels = this.block
+          .getFocusableElement()
+          .getAttribute('aria-label')
+          .split(', ');
+
+        const expectedBeginStackLabel = 'Begin stack';
+        const expectedFieldLabel = 'Edit number: 0';
+        assert.include(labels, expectedBeginStackLabel);
+        assert.include(labels, expectedFieldLabel);
+        assert.isTrue(
+          labels.indexOf(expectedBeginStackLabel) <
+            labels.indexOf(expectedFieldLabel),
+        );
+      });
+      test('Connect to parent updates ARIA label with parent input label', function () {
+        const parentBlock = this.workspace.newBlock('controls_repeat_ext');
+        parentBlock.initSvg();
+        parentBlock.render();
+        this.block.outputConnection.connect(
+          parentBlock.getInput('TIMES').connection,
+        );
+        const labels = this.block
+          .getFocusableElement()
+          .getAttribute('aria-label')
+          .split(', ');
+
+        const expectedInputLabel = 'Edit number of times to repeat';
+        const expectedFieldLabel = 'number: 0';
+        assert.include(labels, expectedInputLabel);
+        assert.include(labels, expectedFieldLabel);
+        assert.isTrue(
+          labels.indexOf(expectedInputLabel) <
+            labels.indexOf(expectedFieldLabel),
+        );
+        assert.notInclude(labels, 'Begin stack');
+      });
+      test('Disconnect from parent updates ARIA label with Begin stack', function () {
+        const parentBlock = this.workspace.newBlock('controls_repeat_ext');
+        parentBlock.initSvg();
+        parentBlock.render();
+        this.block.outputConnection.connect(
+          parentBlock.getInput('TIMES').connection,
+        );
+        this.block.outputConnection.disconnect();
+
+        const label = this.block
+          .getFocusableElement()
+          .getAttribute('aria-label');
+        assert.include(label, 'Begin stack');
+        assert.notInclude(label, 'number of times to repeat');
+      });
+      test('Disconnect during drag updates ARIA label after drag ends', function () {
+        const parentBlock = this.workspace.newBlock('controls_repeat_ext');
+        parentBlock.initSvg();
+        parentBlock.render();
+        this.block.outputConnection.connect(
+          parentBlock.getInput('TIMES').connection,
+        );
+
+        this.block.setDragging(true);
+        this.block.outputConnection.disconnect();
+
+        const labelWhileDragging = this.block
+          .getFocusableElement()
+          .getAttribute('aria-label');
+        assert.notInclude(labelWhileDragging, 'Begin stack');
+
+        this.block.setDragging(false);
+
+        const labelAfterDrag = this.block
+          .getFocusableElement()
+          .getAttribute('aria-label');
+        assert.include(labelAfterDrag, 'Begin stack');
+      });
+    });
   });
 });

@@ -348,7 +348,7 @@ suite('ARIA', function () {
       );
       const block = this.workspace.getFlyout().getWorkspace().getTopBlocks()[0];
       const role = Blockly.utils.aria.getRole(block.getFocusableElement());
-      assert.equal(role, Blockly.utils.aria.Role.LISTITEM);
+      assert.equal(role, Blockly.utils.aria.Role.OPTION);
     });
 
     test('Root workspace blocks indicate that in their labels', function () {

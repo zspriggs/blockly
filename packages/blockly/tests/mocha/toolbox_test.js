@@ -261,6 +261,68 @@ suite('Toolbox', function () {
       sinon.assert.calledOnce(setSelectedSpy);
       sinon.assert.calledOnce(onClickSpy);
     });
+    suite('collapsible category with flyout', function () {
+      setup(function () {
+        const collapsibleCategoryWithFlyout = {
+          kind: 'categoryToolbox',
+          contents: [
+            {
+              kind: 'category',
+              name: 'Parent',
+              categorystyle: 'text_category',
+              contents: [
+                {
+                  kind: 'block',
+                  type: 'text',
+                },
+                {
+                  kind: 'category',
+                  name: 'Child',
+                  categorystyle: 'text_category',
+                  contents: [
+                    {
+                      kind: 'block',
+                      type: 'text_join',
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        };
+        this.toolbox.render(collapsibleCategoryWithFlyout);
+        this.flyout = this.toolbox.getFlyout();
+        this.parentCategory = this.toolbox.getToolboxItems()[0];
+      });
+      function clickCategory(category) {
+        const target = category.getClickTarget();
+        const event = new PointerEvent('pointerdown', {bubbles: true});
+        target.dispatchEvent(event);
+      }
+      test('if category collapsed and flyout hidden, click should uncollapse and open flyout', function () {
+        this.parentCategory.setExpanded(false);
+        clickCategory(this.parentCategory);
+
+        assert.isTrue(this.parentCategory.isExpanded());
+        assert.isTrue(this.flyout.isVisible());
+      });
+      test('if category expanded and flyout hidden, click should open flyout', function () {
+        this.parentCategory.setExpanded(true);
+        this.flyout.hide();
+        clickCategory(this.parentCategory);
+
+        assert.isTrue(this.parentCategory.isExpanded());
+        assert.isTrue(this.flyout.isVisible());
+      });
+      test('category expanded and flyout visible, click should collapse and close', function () {
+        // Click in to expand, then click again to close
+        clickCategory(this.parentCategory);
+        clickCategory(this.parentCategory);
+
+        assert.isFalse(this.parentCategory.isExpanded());
+        assert.isFalse(this.flyout.isVisible());
+      });
+    });
   });
 
   suite('on key down', function () {

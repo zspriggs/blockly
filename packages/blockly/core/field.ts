@@ -13,10 +13,8 @@
  */
 // Former goog.module ID: Blockly.Field
 
-// Unused import preserved for side-effects. Remove if unneeded.
-import './events/events_block_change.js';
-
 import type {Block} from './block.js';
+import {computeAriaLabel} from './block_aria_composer.js';
 import type {BlockSvg} from './block_svg.js';
 import * as browserEvents from './browser_events.js';
 import * as dropDownDiv from './dropdowndiv.js';
@@ -455,6 +453,16 @@ export abstract class Field<T = any>
    * with this method.
    */
   isFullBlockField(): boolean {
+    return false;
+  }
+
+  /**
+   * Returns whether this field is a static text label (ex. FieldLabel).
+   * Used internally instead of `instanceof FieldLabel` to avoid circular imports.
+   *
+   * @internal
+   */
+  isLabelField(): boolean {
     return false;
   }
 
@@ -1518,7 +1526,7 @@ export abstract class Field<T = any>
    *
    * @returns true if the element is in the accessibility tree, false if the aria state is hidden
    */
-  protected recomputeAriaContext(): boolean {
+  recomputeAriaContext(): boolean {
     let focusableElement;
     try {
       focusableElement = this.getFocusableElement();
@@ -1560,7 +1568,16 @@ export abstract class Field<T = any>
     // editing mode that can be activated.
     aria.setRole(focusableElement, aria.Role.BUTTON);
 
-    const label = this.computeAriaLabel(true);
+    let label = this.computeAriaLabel(true);
+    if (this.isFullBlockField()) {
+      // Full block fields get a more detailed label that includes the block's label
+      label = computeAriaLabel(
+        this.getSourceBlock() as BlockSvg,
+        aria.Verbosity.STANDARD,
+        label,
+      );
+    }
+
     aria.setState(focusableElement, aria.State.LABEL, label);
     return true;
   }

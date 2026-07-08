@@ -162,6 +162,9 @@ const content = `
 
 .blocklyHighlightedConnectionPath {
   fill: none;
+}
+
+.blocklyHighlightedConnectionPathVisible {
   stroke: #fc3;
   stroke-width: 4px;
 }
@@ -524,6 +527,7 @@ input[type=number] {
 .blocklyActiveFocus:is(
   .blocklyFlyout,
   .blocklyWorkspace,
+  .blocklyWorkspaceSelectionRing,
   .blocklyField,
   .blocklyPath,
   .blocklyHighlightedConnectionPath,
@@ -571,6 +575,12 @@ input[type=number] {
 
 /* Passive focus cases: */
 /* Blocks with passive focus except when widget/dropdown div in use. */
+.blocklyKeyboardNavigation:not(
+        :has(
+            .blocklyDropDownDiv:focus-within,
+            .blocklyWidgetDiv:focus-within
+          )
+      )
   .blocklyPassiveFocus:is(
     .blocklyPath:not(.blocklyFlyout .blocklyPath),
     .blocklyHighlightedConnectionPath
@@ -596,12 +606,6 @@ input[type=number] {
   stroke: var(--blockly-active-node-color);
   stroke-dasharray: 5px 3px;
   stroke-width: var(--blockly-selection-width);
-}
-
-/* Workaround for unexpectedly hidden connection path due to core style. */
-.blocklyKeyboardNavigation
-  .blocklyPassiveFocus.blocklyHighlightedConnectionPath {
-  display: unset !important;
 }
 
 /* Different ways for toolbox/flyout to be the active tree: */
@@ -647,12 +651,23 @@ input[type=number] {
   stroke-width: calc(var(--blockly-selection-width) * 2);
 }
 
-/* The workspace itself is the active node. */
+/* The region itself is the active node (e.g. focused by clicking the
+   background). */
 .blocklyKeyboardNavigation
   .blocklyWorkspace.blocklyActiveFocus
-  .blocklyWorkspaceSelectionRing {
+  .blocklyWorkspaceSelectionRing,
+/* The selection ring itself is the active node (it doubles as the workspace's
+   keyboard focus target). */
+.blocklyKeyboardNavigation
+  .blocklyWorkspaceSelectionRing.blocklyActiveFocus {
   stroke: var(--blockly-active-node-color);
   stroke-width: var(--blockly-selection-width);
+}
+
+/* The selection ring is a decorative highlight that can also be the workspace's
+   focus target; either way it should never intercept pointer events. */
+.blocklyWorkspaceSelectionRing {
+  pointer-events: none;
 }
 
 /* The workspace itself is the active node. */

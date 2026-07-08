@@ -11,6 +11,7 @@ import {BlockSvg} from './block_svg.js';
 import * as clipboard from './clipboard.js';
 import {RenderedWorkspaceComment} from './comments.js';
 import * as contextmenu from './contextmenu.js';
+import type {Scope} from './contextmenu_registry.js';
 import * as dropDownDiv from './dropdowndiv.js';
 import * as eventUtils from './events/utils.js';
 import {FlyoutButton} from './flyout_button.js';
@@ -31,6 +32,7 @@ import {isSelectable} from './interfaces/i_selectable.js';
 import {Direction, KeyboardMover} from './keyboard_nav/keyboard_mover.js';
 import {keyboardNavigationController} from './keyboard_navigation_controller.js';
 import {Msg} from './msg.js';
+import {RenderedConnection} from './rendered_connection.js';
 import {KeyboardShortcut, ShortcutRegistry} from './shortcut_registry.js';
 import * as Tooltip from './tooltip.js';
 import {aria} from './utils.js';
@@ -79,6 +81,12 @@ export enum names {
   NEXT_HEADING = 'next_heading',
   PREVIOUS_HEADING = 'previous_heading',
   TOGGLE_SCREENREADER = 'toggle_screenreader',
+  JUMP_TOP_STACK = 'jump_to_top_of_stack',
+  JUMP_BOTTOM_STACK = 'jump_to_bottom_of_stack',
+  JUMP_BLOCK_START = 'jump_to_block_start',
+  JUMP_BLOCK_END = 'jump_to_block_end',
+  JUMP_FIRST_BLOCK = 'jump_to_first_block',
+  JUMP_LAST_BLOCK = 'jump_to_last_block',
 }
 
 /**
@@ -330,6 +338,7 @@ export function registerPaste() {
     },
     callback(workspace: WorkspaceSvg, e: Event) {
       const copyData = clipboard.getLastCopiedData();
+      const focusedNode = getFocusManager().getFocusedNode();
       if (!copyData) return false;
 
       const copyWorkspace = clipboard.getLastCopiedWorkspace();
@@ -355,6 +364,17 @@ export function registerPaste() {
         return !!clipboard.paste(copyData, targetWorkspace, mouseCoords);
       }
 
+      // If the focused node is a block, or part of a block (connection, field, etc.),
+      // paste relative to that block's position.
+      const block = targetWorkspace
+        .getNavigator()
+        .getSourceBlockFromNode(focusedNode);
+      const pasteOrigin = block?.getRelativeToSurfaceXY();
+      if (pasteOrigin) {
+        return !!clipboard.paste(copyData, targetWorkspace, pasteOrigin);
+      }
+
+      // No spatial focus target (e.g. workspace root) — use copy-location behavior.
       const copyCoords = clipboard.getLastCopiedLocation();
       if (!copyCoords) {
         // If we don't have location data about the original copyable, let the
@@ -762,7 +782,12 @@ export function registerFocusWorkspace() {
     preconditionFn: (workspace) => !workspace.isDragging(),
     callback: (workspace) => {
       keyboardNavigationController.setIsActive(true);
-      getFocusManager().focusNode(resolveWorkspace(workspace));
+      // Focus the focus target (which announces the stack count) rather than the
+      // workspace region, falling back to the region if there's no focus target.
+      const rootWorkspace = resolveWorkspace(workspace);
+      getFocusManager().focusNode(
+        rootWorkspace.getWorkspaceFocusTarget() ?? rootWorkspace,
+      );
       return true;
     },
     keyCodes: [KeyCodes.W],
@@ -1281,9 +1306,9 @@ export function registerShowTooltip() {
  * improve the experience for individuals using screenreaders.
  */
 export function registerToggleScreenreaderMode() {
-  const shortcut = ShortcutRegistry.registry.createSerializedKey(KeyCodes.Z, [
-    KeyCodes.CTRL_CMD,
+  const shortcut = ShortcutRegistry.registry.createSerializedKey(KeyCodes.A, [
     KeyCodes.ALT,
+    KeyCodes.SHIFT,
   ]);
 
   let enabled = false;
@@ -1310,6 +1335,197 @@ export function registerToggleScreenreaderMode() {
     displayText: () => Msg['SHORTCUTS_TOGGLE_SCREENREADER_MODE'],
   };
   ShortcutRegistry.registry.register(toggleScreenreader);
+}
+
+/**
+ * @param workspace
+ * @param scope
+ * @returns true if the block navigation shortcuts should be allowed, false otherwise.
+ */
+const shouldDoBlockNavigation = (workspace: WorkspaceSvg, scope: Scope) => {
+  return (
+    !workspace.isFlyout &&
+    !!scope.focusedNode &&
+    !workspace.isDragging() &&
+    !getFocusManager().ephemeralFocusTaken() &&
+    // Either a block or something that has a parent block is focused
+    !!workspace.getNavigator().getSourceBlockFromNode(scope.focusedNode)
+  );
+};
+
+/**
+ * Registers a keyboard shortcut that sets the focus to the block
+ * that owns the current focused node.
+ */
+export function registerJumpBlockStart() {
+  const jumpBlockStartShortcut: KeyboardShortcut = {
+    name: names.JUMP_BLOCK_START,
+    preconditionFn: shouldDoBlockNavigation,
+    callback(workspace, e, shortcut, scope) {
+      if (!scope.focusedNode) return false;
+      let selectedBlock = workspace
+        .getNavigator()
+        .getSourceBlockFromNode(scope.focusedNode);
+      if (selectedBlock?.getFullBlockField() && !!selectedBlock.getParent()) {
+        // Act on the parent block if the current block is a full-block field block.
+        // Because full-block field blocks look like fields, so treat them that way.
+        selectedBlock = selectedBlock.getParent();
+      }
+      if (!selectedBlock) return false;
+
+      getFocusManager().focusNode(selectedBlock);
+      return true;
+    },
+    keyCodes: [KeyCodes.HOME],
+    displayText: () => Msg['SHORTCUTS_JUMP_BLOCK_START'],
+  };
+  ShortcutRegistry.registry.register(jumpBlockStartShortcut);
+}
+
+/**
+ * Registers a keyboard shortcut that sets the focus to the
+ * last input of the block that owns the current focused node.
+ */
+export function registerJumpBlockEnd() {
+  const jumpBlockEndShortcut: KeyboardShortcut = {
+    name: names.JUMP_BLOCK_END,
+    preconditionFn: shouldDoBlockNavigation,
+    callback(workspace, e, shortcut, scope) {
+      if (!scope.focusedNode) return false;
+      let selectedBlock = workspace
+        .getNavigator()
+        .getSourceBlockFromNode(scope.focusedNode);
+      if (selectedBlock?.getFullBlockField() && !!selectedBlock.getParent()) {
+        // Act on the parent block if the current block is a full-block field block.
+        // Because full-block field blocks look like fields, so treat them that way.
+        selectedBlock = selectedBlock.getParent();
+      }
+      if (!selectedBlock) return false;
+      const inputs = selectedBlock.inputList;
+      if (!inputs.length) return false;
+      const connection = inputs[inputs.length - 1].connection;
+      if (!connection || !(connection instanceof RenderedConnection))
+        return false;
+      getFocusManager().focusNode(connection);
+      return true;
+    },
+    keyCodes: [KeyCodes.END],
+    displayText: () => Msg['SHORTCUTS_JUMP_BLOCK_END'],
+  };
+  ShortcutRegistry.registry.register(jumpBlockEndShortcut);
+}
+
+/**
+ * Registers a keyboard shortcut that sets the focus to the top block
+ * in the current stack.
+ */
+export function registerJumpTopStack() {
+  const jumpTopStackShortcut: KeyboardShortcut = {
+    name: names.JUMP_TOP_STACK,
+    preconditionFn: shouldDoBlockNavigation,
+    callback(workspace, e, shortcut, scope) {
+      if (!scope.focusedNode) return false;
+      const selectedBlock = workspace
+        .getNavigator()
+        .getSourceBlockFromNode(scope.focusedNode);
+      if (!selectedBlock) return false;
+      const topOfStack = selectedBlock.getRootBlock();
+      getFocusManager().focusNode(topOfStack);
+      return true;
+    },
+    keyCodes: [KeyCodes.PAGE_UP],
+    displayText: () => Msg['SHORTCUTS_JUMP_TOP_STACK'],
+  };
+  ShortcutRegistry.registry.register(jumpTopStackShortcut);
+}
+
+/**
+ * Registers a keyboard shortcut that sets the focus to the bottom block
+ * in the current stack.
+ */
+export function registerJumpBottomStack() {
+  const jumpBottomStackShortcut: KeyboardShortcut = {
+    name: names.JUMP_BOTTOM_STACK,
+    preconditionFn: shouldDoBlockNavigation,
+    callback(workspace, e, shortcut, scope) {
+      if (!scope.focusedNode) return false;
+      const selectedBlock = workspace
+        .getNavigator()
+        .getSourceBlockFromNode(scope.focusedNode);
+      if (!selectedBlock) return false;
+      // To get the bottom block in a stack, first go to the top of the stack
+      // Then get the last next connection
+      // Then get the last descendant of that block
+      const lastBlock = selectedBlock
+        .getRootBlock()
+        .lastConnectionInStack(false)
+        ?.getSourceBlock();
+      if (!lastBlock) return false;
+      const descendants = lastBlock.getDescendants(true);
+      const bottomOfStack = descendants[descendants.length - 1];
+      getFocusManager().focusNode(bottomOfStack);
+      return true;
+    },
+    keyCodes: [KeyCodes.PAGE_DOWN],
+    displayText: () => Msg['SHORTCUTS_JUMP_BOTTOM_STACK'],
+  };
+  ShortcutRegistry.registry.register(jumpBottomStackShortcut);
+}
+
+/**
+ * Registers a keyboard shortcut that sets the focus to the first
+ * block in the workspace.
+ */
+export function registerJumpFirstBlock() {
+  const ctrlCmdHome = ShortcutRegistry.registry.createSerializedKey(
+    KeyCodes.HOME,
+    [KeyCodes.CTRL_CMD],
+  );
+  const jumpFirstBlockShortcut: KeyboardShortcut = {
+    name: names.JUMP_FIRST_BLOCK,
+    preconditionFn: (workspace) => {
+      return (
+        !workspace.isDragging() && !getFocusManager().ephemeralFocusTaken()
+      );
+    },
+    callback(workspace) {
+      const topBlocks = workspace.getTopBlocks(true);
+      if (!topBlocks.length) return false;
+      getFocusManager().focusNode(topBlocks[0]);
+      return true;
+    },
+    keyCodes: [ctrlCmdHome],
+    displayText: () => Msg['SHORTCUTS_JUMP_FIRST_BLOCK'],
+  };
+  ShortcutRegistry.registry.register(jumpFirstBlockShortcut);
+}
+
+/**
+ * Registers a keyboard shortcut that sets the focus to the last
+ * block in the workspace.
+ */
+export function registerJumpLastBlock() {
+  const ctrlCmdEnd = ShortcutRegistry.registry.createSerializedKey(
+    KeyCodes.END,
+    [KeyCodes.CTRL_CMD],
+  );
+  const jumpLastBlockShortcut: KeyboardShortcut = {
+    name: names.JUMP_LAST_BLOCK,
+    preconditionFn: (workspace) => {
+      return (
+        !workspace.isDragging() && !getFocusManager().ephemeralFocusTaken()
+      );
+    },
+    callback(workspace) {
+      const allBlocks = workspace.getAllBlocks(true);
+      if (!allBlocks.length) return false;
+      getFocusManager().focusNode(allBlocks[allBlocks.length - 1]);
+      return true;
+    },
+    keyCodes: [ctrlCmdEnd],
+    displayText: () => Msg['SHORTCUTS_JUMP_LAST_BLOCK'],
+  };
+  ShortcutRegistry.registry.register(jumpLastBlockShortcut);
 }
 
 /**
@@ -1354,6 +1570,19 @@ export function registerScreenReaderShortcuts() {
   registerReadInformation();
   registerReadExtendedInformation();
   registerToggleScreenreaderMode();
+}
+
+/**
+ * Registers keyboard shortcuts used to jump between blocks and stacks in the workspace.
+ * Note these are not registered by default, so call this function to enable them if desired.
+ */
+export function registerNavigationShortcuts() {
+  registerJumpBlockStart();
+  registerJumpBlockEnd();
+  registerJumpTopStack();
+  registerJumpBottomStack();
+  registerJumpFirstBlock();
+  registerJumpLastBlock();
 }
 
 registerDefaultShortcuts();

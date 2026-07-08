@@ -683,7 +683,7 @@ export abstract class Flyout
     if (!this.targetWorkspace.isMutator && !this.autoClose) {
       aria.setRole(this.getWorkspace().svgGroup_, aria.Role.REGION);
     } else {
-      aria.setRole(this.getWorkspace().svgGroup_, aria.Role.PRESENTATION);
+      aria.setRole(this.getWorkspace().svgGroup_, aria.Role.NONE);
     }
 
     // the label for a flyout includes the category name if it's available
@@ -697,9 +697,9 @@ export abstract class Flyout
       .trim();
     aria.setState(this.getWorkspace().getCanvas(), aria.State.LABEL, ariaLabel);
 
-    // The block canvas is a list. The list items must be direct descendants of the list,
+    // The block canvas is a listbox. The options must be direct descendants of the listbox,
     // and the flyout may or may not be a region, so we set the role on the block canvas rather than the svgGroup_.
-    aria.setRole(this.getWorkspace().getCanvas(), aria.Role.LIST);
+    aria.setRole(this.getWorkspace().getCanvas(), aria.Role.LISTBOX);
   }
 
   /**

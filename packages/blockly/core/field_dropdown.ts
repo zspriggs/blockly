@@ -933,16 +933,13 @@ export class FieldDropdown extends Field<string> {
   }
 
   /**
-   * Overrides the default label and sets additional aria state.
+   * Sets additional aria state.
    */
   override recomputeAriaContext(): boolean {
     const shouldCustomize = super.recomputeAriaContext();
     if (!shouldCustomize) return false;
 
     const focusableElement = this.getFocusableElement();
-    const label = this.computeAriaLabel(true);
-
-    aria.setState(focusableElement, aria.State.LABEL, label);
     aria.setState(focusableElement, aria.State.HASPOPUP, 'listbox');
     aria.setState(focusableElement, aria.State.EXPANDED, !!this.menu_);
     return true;

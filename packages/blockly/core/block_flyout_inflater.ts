@@ -74,13 +74,30 @@ export class BlockFlyoutInflater implements IFlyoutInflater {
       // blocks can't be focused if they're in a flyout and not top-level
       // nonfocusable blocks should be hidden from the aria tree
       aria.setState(focusableElement, aria.State.HIDDEN, true);
-      aria.setRole(focusableElement, aria.Role.PRESENTATION);
+      aria.setRole(focusableElement, aria.Role.NONE);
     });
     // Since getDescencdants includes the root block, we need
     // to correct the role and hidden state for it.
     const focusableElement = block.getFocusableElement();
     aria.clearState(focusableElement, aria.State.HIDDEN);
-    aria.setRole(focusableElement, aria.Role.LISTITEM);
+    aria.setRole(focusableElement, aria.Role.OPTION);
+
+    // Clickable icons in the flyout are owned by their parent block.
+    // This ensures that clickable icons are not included in the option
+    // count when screen readers assess the number of options in the
+    // flyout listbox.
+    const ownedIconIds = block
+      .getIcons()
+      .filter((icon) => icon.isClickableInFlyout?.(flyout.autoClose))
+      .map((icon) => icon.getFocusableElement().id)
+      .filter((id) => !!id);
+    // Likewise for connections.
+    const ownedConnectionIds = block.getConnections_(true).map((c) => c.id);
+    const ownedChildIds = [...ownedIconIds, ...ownedConnectionIds];
+    if (ownedChildIds.length) {
+      aria.setState(focusableElement, aria.State.OWNS, ownedChildIds);
+    }
+
     this.addBlockListeners(block);
 
     return new FlyoutItem(block, BLOCK_TYPE);

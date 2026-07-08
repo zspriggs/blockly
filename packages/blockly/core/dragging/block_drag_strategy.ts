@@ -604,12 +604,10 @@ export class BlockDragStrategy implements IDragStrategy {
   private determineConnectionOffset(): Coordinate {
     const {local, neighbour} = this.connectionCandidate!;
 
-    const dx = neighbour.x - local.x;
-    const dy = neighbour.y - local.y;
+    const connOffset = local.getOffsetInBlock();
 
-    // Base aligned position
-    let x = this.startLoc!.x + dx;
-    let y = this.startLoc!.y + dy;
+    let x = neighbour.x - connOffset.x;
+    let y = neighbour.y - connOffset.y;
 
     // Decide offset direction
     const becomingChild =
@@ -650,51 +648,52 @@ export class BlockDragStrategy implements IDragStrategy {
     const newCandidate =
       this.getInitialCandidate() ?? this.getConnectionCandidate(delta);
 
+    this.connectionPreviewer?.hidePreview();
+    this.connectionCandidate = null;
     if (!newCandidate) {
       // Position above or below the first/last block.
       if (this.moveMode === MoveMode.CONSTRAINED) {
-        const connectedBlock = currCandidate?.neighbour.getSourceBlock();
+        const connectedBlock =
+          currCandidate?.neighbour.getSourceBlock() ?? null;
         let root = connectedBlock?.getRootBlock() ?? connectedBlock;
         if (root === draggingBlock) root = connectedBlock;
-        const direction = this.getDirectionToNewLocation(
-          Coordinate.sum(this.startLoc!, delta),
-        );
-        const bounds = root?.getBoundingRectangle();
-        if (!bounds) return;
+        if (!root) return;
 
         const blockRects = draggingBlock.workspace
           .getTopBlocks()
+          .filter((block) => block !== draggingBlock.getRootBlock())
           .map((block) => block.getBoundingRectangle());
-        const blocksLeft = Math.min(...blockRects.map((rect) => rect.left));
+        if (!blockRects.length) return;
 
-        let destination: Coordinate;
-        let blockBound: number;
+        // If the block was previously connected, position the block near its previous connection.
+        const destinationX =
+          currCandidate?.neighbour.x ??
+          draggingBlock.getRelativeToSurfaceXY().x;
+        let destinationY: number;
+        const offset = this.BLOCK_CONNECTION_OFFSET * 2;
+
+        const direction = this.getDirectionToNewLocation(
+          Coordinate.sum(this.startLoc!, delta),
+        );
         switch (direction) {
           case Direction.LEFT:
           case Direction.UP:
-            blockBound = Math.min(...blockRects.map((rect) => rect.top));
-            destination = new Coordinate(
-              blocksLeft,
-              blockBound -
-                this.BLOCK_CONNECTION_OFFSET * 2 -
-                draggingBlock.getHeightWidth().height,
-            );
+            destinationY =
+              Math.min(...blockRects.map((rect) => rect.top)) -
+              offset -
+              draggingBlock.getHeightWidth().height;
             break;
           case Direction.RIGHT:
           case Direction.DOWN:
           default:
-            blockBound = Math.max(...blockRects.map((rect) => rect.bottom));
-            destination = new Coordinate(
-              blocksLeft,
-              blockBound + this.BLOCK_CONNECTION_OFFSET * 2,
-            );
+            destinationY =
+              Math.max(...blockRects.map((rect) => rect.bottom)) + offset;
             break;
         }
-        draggingBlock.moveDuringDrag(destination);
+        draggingBlock.moveDuringDrag(
+          new Coordinate(destinationX, destinationY),
+        );
       }
-
-      this.connectionPreviewer?.hidePreview();
-      this.connectionCandidate = null;
       return;
     }
     const candidate =
@@ -1142,11 +1141,15 @@ export class BlockDragStrategy implements IDragStrategy {
     const actualPosition = this.block.getRelativeToSurfaceXY();
     const delta = Coordinate.difference(newLocation, actualPosition);
     const {x, y} = delta;
-
-    if (x < 0) return Direction.LEFT;
-    if (x > 0) return Direction.RIGHT;
-    if (y < 0) return Direction.UP;
-    if (y > 0) return Direction.DOWN;
+    // Pick the dominant axis rather than testing x before y. A keyboard move is
+    // single-axis by intent, but the delta is round-tripped through pixels
+    // (KeyboardMover scales up by workspace.scale, Dragger scales back down), so
+    // at any zoom != 1 the axis that should be zero carries ~1e-14 of
+    // floating-point residue. Comparing magnitudes keeps that residue from
+    // outranking the real movement and flipping e.g. a DOWN press to RIGHT.
+    if (Math.abs(x) > Math.abs(y))
+      return x < 0 ? Direction.LEFT : Direction.RIGHT;
+    if (Math.abs(y) > 0) return y < 0 ? Direction.UP : Direction.DOWN;
     return Direction.NONE;
   }
 

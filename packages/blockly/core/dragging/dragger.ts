@@ -46,17 +46,22 @@ export class Dragger implements IDragger {
   onDrag(e: PointerEvent | KeyboardEvent | undefined, totalDelta: Coordinate) {
     this.moveDraggable(e, totalDelta);
 
+    const pointerEvent = e instanceof PointerEvent ? e : null;
+    if (!pointerEvent) return;
+
+    const coordinate = new Coordinate(
+      pointerEvent.clientX,
+      pointerEvent.clientY,
+    );
     // Must check `wouldDelete` before calling other hooks on drag targets
     // since we have documented that we would do so.
     if (isDeletable(this.draggable)) {
       this.draggable.setDeleteStyle(
-        this.wouldDeleteDraggable(
-          this.draggable.getRelativeToSurfaceXY(),
-          this.draggable,
-        ),
+        this.wouldDeleteDraggable(coordinate, this.draggable),
       );
     }
-    this.updateDragTarget(this.draggable.getRelativeToSurfaceXY());
+
+    this.updateDragTarget(coordinate);
   }
 
   /** Updates the drag target under the pointer (if there is one). */
@@ -107,31 +112,37 @@ export class Dragger implements IDragger {
   /** Handles any drag cleanup. */
   onDragEnd(e?: PointerEvent | KeyboardEvent) {
     const origGroup = eventUtils.getGroup();
-    const dragTarget = this.draggable.workspace.getDragTarget(
-      this.draggable.getRelativeToSurfaceXY(),
+    const pointerEvent = e instanceof PointerEvent ? e : null;
+
+    if (!pointerEvent) {
+      // For keyboard events, we don't check for a drag target or delete area. Just commit the drag.
+      this.draggable.endDrag(e, DragDisposition.COMMIT);
+      if (isFocusableNode(this.draggable)) {
+        // Ensure focusable nodes end drag with focus and selection.
+        getFocusManager().focusNode(this.draggable);
+      }
+      return;
+    }
+
+    const coordinate = new Coordinate(
+      pointerEvent.clientX,
+      pointerEvent.clientY,
     );
+    const dragTarget = this.draggable.workspace.getDragTarget(coordinate);
 
     if (dragTarget) {
       this.dragTarget?.onDrop(this.draggable);
     }
 
     let reverted = false;
-    if (
-      this.shouldReturnToStart(
-        this.draggable.getRelativeToSurfaceXY(),
-        this.draggable,
-      )
-    ) {
+    if (this.shouldReturnToStart(coordinate, this.draggable)) {
       reverted = true;
       this.draggable.revertDrag();
     }
 
     const wouldDelete =
       isDeletable(this.draggable) &&
-      this.wouldDeleteDraggable(
-        this.draggable.getRelativeToSurfaceXY(),
-        this.draggable,
-      );
+      this.wouldDeleteDraggable(coordinate, this.draggable);
 
     if (wouldDelete && isDeletable(this.draggable)) {
       this.draggable.endDrag(e, DragDisposition.DELETE);
