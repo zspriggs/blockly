@@ -4,6 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+/**
+ * @fileoverview The toolbox category built during the custom toolbox codelab, in es6.
+ * @author aschmiedt@google.com (Abby Schmiedt)
+ */
+
 import * as Blockly from 'blockly';
 
 class CustomCategory extends Blockly.ToolboxCategory {
@@ -51,7 +56,11 @@ class CustomCategory extends Blockly.ToolboxCategory {
     }
   }
 
-  /** @override */
+/**
+   * Creates the dom used for the icon.
+   * @returns {HTMLElement} The element for the icon.
+   * @override
+   */
   createIconDom_() {
     const icon = document.createElement('span');
     icon.textContent = '🧰';
