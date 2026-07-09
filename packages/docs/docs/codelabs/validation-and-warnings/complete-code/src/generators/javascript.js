@@ -1,10 +1,10 @@
 /**
  * @license
- * Copyright 2023 Google LLC
+ * Copyright 2026 Raspberry Pi Foundation
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Order} from 'blockly/javascript';
+import { Order } from 'blockly/javascript';
 
 // Export all the code generators for our custom blocks,
 // but don't register them with Blockly yet.
