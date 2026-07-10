@@ -21,14 +21,22 @@ Use the [`npx @blockly/create-package app`](https://www.npmjs.com/package/@block
 
 The initial application has one custom block and includes JavaScript generator definitions for that block. Since this codelab will be creating a JSON generator instead, it will remove that custom block and add its own.
 
-The complete code used in this codelab can be viewed in the `blockly` repository under [packages/docs/docs/codelabs/custom-generator](https://github.com/RaspberryPiFoundation/blockly/tree/main/packages/docs/docs/codelabs/custom-generator/complete-code).
+### Change the storage key
 
-Before setting up the rest of the application, change the storage key used for this codelab application. This will ensure that the workspace is saved in its own storage, separate from the regular sample app, so that it doesn't interfere with other demos. In `serialization.js`, change the value of `storageKey` to some unique string. `jsonGeneratorWorkspace` will work:
+Before setting up the rest of the application, change the storage key used for this codelab application. This will ensure that the workspace is saved in its own storage, separate from the regular sample app, so that it doesn't interfere with other demos. 
+
+In `serialization.js`, change the value of `storageKey` to some unique string. `jsonGeneratorWorkspace` will work:
 
 ```js
 // Use a unique storage key for this codelab
 const storageKey = 'jsonGeneratorWorkspace';
 ```
+
+### Explore the starter code
+
+Take a moment to explore the code you just created in the `custom-generator-codelab` folder. If you'd like a more in-depth explanation of all of the code in the sample app, check out the [getting started codelab](/codelabs/getting-started/codelab-overview) which goes through creating this sample app from scratch.
+
+For a briefer outline of the code, visit the [sample app overview](/guides/get-started/sample-app-overview/) page for an overview of the included files and tooling.
 
 ### Blocks
 
