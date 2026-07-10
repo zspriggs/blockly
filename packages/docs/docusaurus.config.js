@@ -52,7 +52,7 @@ const config = {
             '**/_*/**',
             '**/*.test.{js,jsx,ts,tsx}',
             '**/__tests__/**',
-            
+
             '**/complete-code/**',
           ],
           showLastUpdateTime: true,
