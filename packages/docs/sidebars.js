@@ -1346,16 +1346,6 @@ const sidebars = {
             },
             {
               type: 'doc',
-              label: 'Code review process',
-              id: 'guides/contribute/get-started/pr_review_process',
-            },
-            {
-              type: 'doc',
-              label: 'Issue labels',
-              id: 'guides/contribute/get-started/issue_labels',
-            },
-            {
-              type: 'doc',
               label: 'Use the playground',
               id: 'guides/contribute/get-started/playground',
             },
