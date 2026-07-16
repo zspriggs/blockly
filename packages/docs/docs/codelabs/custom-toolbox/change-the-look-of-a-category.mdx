@@ -75,6 +75,12 @@ Then, import the new file in `index.js`:
 import './toolbox_style.css';
 ```
 
+:::note
+Importing a `.css` file into a JavaScript file isn't standard JavaScript. It 
+works here because this project's webpack config (`webpack.config.js`) has a 
+rule that bundles and injects `.css` files.
+:::
+
 Copy and paste the following CSS into your `toolbox_style.css` file.
 
 ```css
