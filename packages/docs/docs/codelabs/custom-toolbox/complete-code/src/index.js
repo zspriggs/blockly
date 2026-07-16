@@ -12,12 +12,17 @@ import { save, load } from './serialization';
 import { toolbox } from './toolbox';
 import './index.css';
 import './toolbox_style.css';
-import './custom_category.js';
-import './toolbox_label.js';
+import { CustomCategory, registerCustomCategory } from './custom_category.js';
+import { ToolboxLabel, registerToolboxLabel } from './toolbox_label.js';
 
 // Register the blocks and generator with Blockly
 Blockly.common.defineBlocks(blocks);
 Object.assign(javascriptGenerator.forBlock, forBlock);
+
+// Register the custom category
+registerCustomCategory();
+// Register the toolbox label
+registerToolboxLabel();
 
 // Set up UI elements and inject Blockly
 const codeDiv = document.getElementById('generatedCode').firstChild;

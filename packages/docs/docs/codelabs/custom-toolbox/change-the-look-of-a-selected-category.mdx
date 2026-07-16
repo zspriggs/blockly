@@ -48,7 +48,7 @@ The parent method does one thing we still need: it sets the ARIA state to `State
 so that screen readers can announce when a category is selected. 
 
 There are multiple ways to handle this:
-1. Call `super.setSelected`
+1. Call `super.setSelected` (preferred)
 1. Take a look at the parent implementation and add the same functionality.
 
 In this case, add a call to `super.setSelected`. This will ensure that if 
@@ -79,9 +79,9 @@ setSelected(isSelected){
 ```
 
 :::note 
-Check the parent implementation whenever you override a Blockly method. This
-will help ensure that you are properly implementing non-visual processes that are 
-important. 
+Review the parent implementation whenever you override a Blockly method, and call
+`super()` unless you have a strong reason not to. This helps you properly 
+implement non-visual processes that are important. 
 :::
 
 ### The result

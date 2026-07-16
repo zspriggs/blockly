@@ -33,8 +33,11 @@ class ToolboxLabel extends Blockly.ToolboxItem {
   }
 }
 
-Blockly.registry.register(
-  Blockly.registry.Type.TOOLBOX_ITEM,
-  'toolboxlabel',
-  ToolboxLabel,
-);
+export function registerToolboxLabel() {
+  Blockly.registry.register(
+    Blockly.registry.Type.TOOLBOX_ITEM,
+    'toolboxlabel',
+    ToolboxLabel,
+  );
+}
+

@@ -68,9 +68,12 @@ class CustomCategory extends Blockly.ToolboxCategory {
   }
 }
 
-Blockly.registry.register(
-  Blockly.registry.Type.TOOLBOX_ITEM,
-  Blockly.ToolboxCategory.registrationName,
-  CustomCategory,
-  true,
-);
+export function registerCustomCategory() {
+  Blockly.registry.register(
+    Blockly.registry.Type.TOOLBOX_ITEM,
+    Blockly.ToolboxCategory.registrationName,
+    CustomCategory,
+    true,
+  );
+}
+

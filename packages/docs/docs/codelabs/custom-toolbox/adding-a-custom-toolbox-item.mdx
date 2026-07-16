@@ -16,31 +16,38 @@ For this example, we are going to create a toolbox label.
 ### Setup
 
 In the same directory as `index.js` create a new file named `toolbox_label.js`.
-
-Import this file in `index.js`:
-
-```js
-import './toolbox_label.js';
-```
-
-Create a class in `toolbox_label.js` that extends `Blockly.ToolboxItem` and register it.
+Create a class in `toolbox_label.js` that extends `Blockly.ToolboxItem` and create a function to register it.
 
 ```js
 import * as Blockly from 'blockly';
 
 class ToolboxLabel extends Blockly.ToolboxItem {
-  constructor(toolboxItemDef, parentToolbox) {
-    super(toolboxItemDef, parentToolbox);
-  }
+  // You'll add functions to this class soon
+
 }
 
-Blockly.registry.register(
-  Blockly.registry.Type.TOOLBOX_ITEM,
-  'toolboxlabel',
-  ToolboxLabel,
-);
+export function registerToolboxLabel() {
+  Blockly.registry.register(
+    Blockly.registry.Type.TOOLBOX_ITEM,
+    'toolboxlabel',
+    ToolboxLabel,
+  );
+}
 ```
 
+As with the custom category, you'll also need to import the `ToolboxLabel` and registration function in `index.js`.
+To register the toolbox label, call the `registerToolboxLabel()` function in `index.js`, just after registering the custom category:
+
+```js
+import { ToolboxLabel, registerToolboxLabel } from './toolbox_label.js';
+
+...
+
+// Register the custom category
+registerCustomCategory();
+// Register the toolbox label
+registerToolboxLabel();
+```
 By registering this toolbox item with the name "toolboxlabel" we can now use this
 name in our toolbox definition to add our custom item to the toolbox.
 
@@ -78,7 +85,7 @@ There are three different types of toolbox item interfaces:
 Since we do not need our label to be selectable or collapsible, we can implement
 the basic `IToolboxItem` interface.
 
-First, we are going to add an init method that will create the dom for our toolbox label:
+First, we are going to add an init method to the `ToolboxLabel` class that will create the dom for our toolbox label:
 
 ```js
   /** @override */
