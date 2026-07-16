@@ -3,8 +3,10 @@ description: How to add a new localization token to Blockly core.
 title: Add a new localization token to Blockly core
 image: images/blockly_banner.png
 ---
-
-# Add a new localization token to Blockly core
+# Localization and translation
+{/* TODO explain the difference, why it matters */}
+{/* it feels silly to put klingon at the top but also might kinda be a good spot for it */}
+## Add a new localization token to Blockly core
 
 If you add a feature to Blockly core that requires new user-visible strings, you
 must add those strings to `Blockly.Msg` so that they can be [translated by
@@ -51,7 +53,7 @@ and in `msg/qqq.json`:
 
 Then you can reference this string in code with `Blockly.Msg['MY_NEW_MESSAGE']`.
 
-## Translation hints
+### Translation hints
 
 The triple-slash comment in `msg/messages.js` is shown to TranslateWiki users as
 supplementary information when translating. Provide context for where the
@@ -72,7 +74,7 @@ provides a link to more information.
 Blockly.Msg.CONTROLS_FOR_TITLE = 'count with %1 from %2 to %3 by %4';
 ```
 
-### Context types
+#### Context types
 
 Many of the hints use a prefix to explain the context of a message. The common
 prefixes include:
@@ -87,7 +89,7 @@ prefixes include:
 
 If your message appears in one of these context, use the appropriate prefix.
 
-## Synonyms
+### Synonyms
 
 Sometimes a message key needs to be changed, but the translations don't. In that
 case, you can set the old message as a synonym of the new message, like so:
@@ -97,7 +99,7 @@ case, you can set the old message as a synonym of the new message, like so:
 Blockly.Msg.CONTROLS_FOR_INPUT_DO = Blockly.Msg.CONTROLS_REPEAT_INPUT_DO;
 ```
 
-## Optional messages
+### Optional messages
 
 Some message strings are unlikely to need translation except in certain
 circumstances, for example, proper nouns or symbols. In Blockly, help URLs are
@@ -114,7 +116,7 @@ complete the optional translations.
 Blockly.Msg.MATH_ADDITION_SYMBOL = '+';
 ```
 
-## Notranslate items
+### Notranslate items
 
 The colours used for default block categories are marked `{{notranslate}}`. These colours are not intended to be
 localized, but are in the localization system so that developers can easily
@@ -133,3 +135,35 @@ Blockly.Msg.LOGIC_HUE = '210';
 [translatewiki]: /guides/contribute/core/translating
 [localization]: /guides/configure/translations
 [block-colour]: /guides/configure/appearance/block-colour#set-block-colour
+
+# Translate text
+
+Students shouldn't have to struggle with learning English at the same time as
+they're learning computer science concepts. If you are a native speaker of a
+language other than English, we'd appreciate your assistance in reaching the 95%
+of the world that doesn't speak English natively.
+
+## Translatewiki
+
+Translations for Blockly are handled by Translatewiki.
+
+1.  Sign up to become a translator at
+    [translatewiki.net](https://translatewiki.net/).
+1.  Do some [test
+    translations](https://translatewiki.net/wiki/Special:TranslationStash) to
+    get permission to translate (choose a language in the upper-right).
+1.  Briefly read over the [style
+    guide](https://translatewiki.net/wiki/Translating:Blockly) for Blockly's
+    translations.
+1.  Go to Blockly's [message group](https://translatewiki.net/w/i.php?title=Special:Translate&group=out-blockly-0-all)
+    (choose a language in the upper-right), and start translating!
+
+New translations may take a few months to show up on the live site.
+
+![A photo showing three Vietnamese girls in front of a
+computer.](/images/vietnam.jpg)
+{/* TODO: Reassess if we want an img here? esp now that this is combined with 
+another doc, it feels a bit weird to have an image here bc that's not the convention for our docs. */}
+
+Note that [Klingon](klingon) is not supported by Translatewiki, so that language
+needs to be handled separately.
