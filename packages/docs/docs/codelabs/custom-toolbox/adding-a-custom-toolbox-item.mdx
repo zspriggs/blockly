@@ -92,6 +92,9 @@ First, we are going to add an init method to the `ToolboxLabel` class that will 
   init() {
     // Create the label.
     this.label = document.createElement('label');
+    // Set ARIA role and description, so that screenreaders can see and read the label
+    this.label.setAttribute('role', 'treeitem');
+    this.label.setAttribute('aria-roledescription', 'label');
     // Set the name.
     this.label.textContent = 'Label';
   }

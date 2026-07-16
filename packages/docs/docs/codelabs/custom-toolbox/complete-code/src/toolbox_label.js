@@ -7,14 +7,15 @@
 import * as Blockly from 'blockly';
 
 class ToolboxLabel extends Blockly.ToolboxItem {
-  constructor(toolboxItemDef, parentToolbox) {
-    super(toolboxItemDef, parentToolbox);
-  }
-
   /** @override */
   init() {
     // Create the label.
     this.label = document.createElement('label');
+    // Set ARIA role and description, so that screenreaders can see and read the label
+    this.label.setAttribute('role', 'treeitem');
+    this.label.setAttribute('aria-roledescription', 'label');
+    // Set the id.
+    this.label.id = this.getId();
     // Set the name.
     this.label.textContent = this.toolboxItemDef_['name'];
     // Set the color.
@@ -40,4 +41,3 @@ export function registerToolboxLabel() {
     ToolboxLabel,
   );
 }
-
