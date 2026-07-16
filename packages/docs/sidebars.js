@@ -1326,11 +1326,6 @@ const sidebars = {
             },
             {
               type: 'doc',
-              label: 'Development tools',
-              id: 'guides/contribute/get-started/development_tools',
-            },
-            {
-              type: 'doc',
               label: 'Write a good issue',
               id: 'guides/contribute/get-started/write_a_good_issue',
             },
@@ -1343,11 +1338,6 @@ const sidebars = {
               type: 'doc',
               label: 'Commit message guide',
               id: 'guides/contribute/get-started/commits',
-            },
-            {
-              type: 'doc',
-              label: 'Use the playground',
-              id: 'guides/contribute/get-started/playground',
             },
           ],
         },
@@ -1373,44 +1363,55 @@ const sidebars = {
             },
             {
               type: 'doc',
+              label: 'Development tools',
+              id: 'guides/contribute/core/development_tools',
+            },
+            {
+              type: 'doc',
               label: 'Style guide',
               id: 'guides/contribute/core/style_guide',
             },
             {
               type: 'doc',
-              label: 'Build scripts',
-              id: 'guides/contribute/core/building',
+              label: 'Localization and translation',
+              id: 'guides/contribute/core/localization_and_translation',
             },
             {
               type: 'doc',
-              label: 'Advanced compilation',
-              id: 'guides/contribute/core/advanced',
+              label: 'Klingon',
+              id: 'guides/contribute/core/klingon',
             },
             {
               type: 'category',
-              label: 'Localization',
+              label: 'Testing',
               items: [
                 {
                   type: 'doc',
-                  label: 'Add a new localization token',
-                  id: 'guides/contribute/core/add_localization_token',
+                  label: 'Use the playground',
+                  id: 'guides/contribute/core/testing/playground',
                 },
                 {
                   type: 'doc',
-                  label: 'Translate text',
-                  id: 'guides/contribute/core/translating',
-                },
-                {
-                  type: 'doc',
-                  label: 'Klingon',
-                  id: 'guides/contribute/core/klingon',
+                  label: 'Unit tests',
+                  id: 'guides/contribute/core/testing/unit_testing',
                 },
               ],
             },
             {
-              type: 'doc',
-              label: 'Unit tests',
-              id: 'guides/contribute/core/unit_testing',
+              type: 'category',
+              label: 'Building and compilation',
+              items: [
+                {
+                  type: 'doc',
+                  label: 'Build scripts',
+                  id: 'guides/contribute/core/building_and_compilation/building',
+                },
+                {
+                  type: 'doc',
+                  label: 'Advanced compilation',
+                  id: 'guides/contribute/core/building_and_compilation/advanced',
+                },
+              ],
             },
             {
               type: 'doc',
