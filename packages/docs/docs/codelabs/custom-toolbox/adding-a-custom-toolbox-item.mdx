@@ -35,11 +35,11 @@ export function registerToolboxLabel() {
 }
 ```
 
-As with the custom category, you'll also need to import the `ToolboxLabel` and registration function in `index.js`.
+As with the custom category, you'll also need to import the registration function in `index.js`.
 To register the toolbox label, call the `registerToolboxLabel()` function in `index.js`, just after registering the custom category:
 
 ```js
-import { ToolboxLabel, registerToolboxLabel } from './toolbox_label.js';
+import { registerToolboxLabel } from './toolbox_label.js';
 
 ...
 
@@ -93,12 +93,19 @@ First, we are going to add an init method to the `ToolboxLabel` class that will 
     // Create the label.
     this.label = document.createElement('label');
     // Set ARIA role and description, so that screenreaders can see and read the label
-    this.label.setAttribute('role', 'treeitem');
-    this.label.setAttribute('aria-roledescription', 'label');
+    Blockly.utils.aria.setRole(this.label, 'treeitem');
+    Blockly.utils.aria.setState(
+      this.label,
+      Blockly.utils.aria.State.ROLEDESCRIPTION,
+      'label',
+    );
     // Set the name.
     this.label.textContent = 'Label';
   }
 ```
+
+The `init()` function defined above includes setting the ARIA role and state for 
+screenreader support. To learn more, see the [screenreader support doc].(/guides/configure/screen-reader/)
 
 Next, we are going to return this element:
 

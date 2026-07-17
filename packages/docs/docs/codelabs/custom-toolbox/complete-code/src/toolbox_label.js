@@ -12,8 +12,12 @@ class ToolboxLabel extends Blockly.ToolboxItem {
     // Create the label.
     this.label = document.createElement('label');
     // Set ARIA role and description, so that screenreaders can see and read the label
-    this.label.setAttribute('role', 'treeitem');
-    this.label.setAttribute('aria-roledescription', 'label');
+    Blockly.utils.aria.setRole(this.label, 'treeitem');
+    Blockly.utils.aria.setState(
+      this.label,
+      Blockly.utils.aria.State.ROLEDESCRIPTION,
+      'label',
+    );
     // Set the id.
     this.label.id = this.getId();
     // Set the name.

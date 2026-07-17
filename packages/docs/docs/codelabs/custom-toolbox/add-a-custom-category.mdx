@@ -38,11 +38,11 @@ export function registerCustomCategory() {
 }
 ```
 
-Finally, you'll need to import the new category, and registration function, in `index.js`.
+Finally, you'll need to import the registration function in `index.js`.
 To register the custom category, call the `registerCustomCategory()` function in `index.js`, just after registering the blocks and generator:
 
 ```js
-import { CustomCategory, registerCustomCategory } from './custom_category.js';
+import { registerCustomCategory } from './custom_category.js';
 
 // Register the blocks and generator with Blockly
 Blockly.common.defineBlocks(blocks);

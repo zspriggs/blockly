@@ -12,8 +12,8 @@ import { save, load } from './serialization';
 import { toolbox } from './toolbox';
 import './index.css';
 import './toolbox_style.css';
-import { CustomCategory, registerCustomCategory } from './custom_category.js';
-import { ToolboxLabel, registerToolboxLabel } from './toolbox_label.js';
+import { registerCustomCategory } from './custom_category.js';
+import { registerToolboxLabel } from './toolbox_label.js';
 
 // Register the blocks and generator with Blockly
 Blockly.common.defineBlocks(blocks);
