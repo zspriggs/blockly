@@ -93,7 +93,7 @@ First, we are going to add an init method to the `ToolboxLabel` class that will 
     // Create the label.
     this.label = document.createElement('label');
     // Set ARIA role and description, so that screenreaders can see and read the label
-    Blockly.utils.aria.setRole(this.label, 'treeitem');
+    Blockly.utils.aria.setRole(this.label, Blockly.utils.aria.Role.TREEITEM);
     Blockly.utils.aria.setState(
       this.label,
       Blockly.utils.aria.State.ROLEDESCRIPTION,
