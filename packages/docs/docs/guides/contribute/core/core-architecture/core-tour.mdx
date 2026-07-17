@@ -1,0 +1,115 @@
+---
+description: Overview of the structure and architecture of the core repository.
+title: Core Tour
+image: images/blockly_banner.png
+---
+
+# Core tour
+
+## Blockly code
+
+The code for Blockly's core can be found [on GitHub](https://github.com/RaspberryPiFoundation/blockly/tree/main). 
+This page is intended as a guide so that you can:
+- Explore Blockly's repository
+- Understand the functionality that Blockly offers
+- Determine where to start if you're working on a GitHub Issue
+
+:::tip
+Don't worry, you do **not** have to read and understand the code in every folder
+in order to contribute to Blockly! You just need to understand the parts that 
+relate to what you're working on. 
+:::
+
+### Folder structure
+
+{/* TODO okay but its not the root folder bc we refer to packages/blockly as the root folder quite often */}
+The root folder of Blockly's GitHub repository contains many files (and some folders)
+for the configuration of our [development tools](/guides/contribute/core/development_tools).
+{/* are block comments implemented as bubbles or comments? */}
+{/* I think theoretically there's a case for linking to API docs here
+but linking to api docs for every folder makes no sense. 
+so TODO add a general plug for using the API docs */}
+
+Blockly's source code is located in `packages/blockly`.
+
+`packages/blockly/`
+- `blocks/` - Block definitions for built-in blocks
+- `core/` 
+    - `bubbles/` - Code for creating popover bubbles, such as mutator UI
+    - `clipboard/` - [Copy/paste](/guides/configure/copy-paste/) 
+    - `comments/` - Workspace [comments](/guides/configure/) 
+    - `dragging/` - Mechanics for [dragging objects](/guides/configure/dragging/draggable/) in the workspace
+    - `events/` - [Events](/guides/configure/events) class and built-in events
+    - `icons/` - [Icon](/guides/create-custom-blocks/icons/overview/) class and built-in icons
+    - `inputs/` - [Input](/guides/create-custom-blocks/inputs/creating-custom-inputs/) types and their connections
+    - `interfaces/` - Shared interfaces implemented across core
+    - `keyboard_nav/` - [Keyboard navigation](/guides/configure/keyboard-nav/)
+        - `navigation_policies/`
+        - `navigators/`
+    - `renderers/` - Default [renderers](/guides/create-custom-blocks/renderers/overview/)
+        - `common/` - Base classes shared by the renderers
+        - `geras/` - Built-in renderer with 3-D edges
+        - `measurables/` - Classes that represent each part of a block
+        - `thrasos/` - Built-in minimalist renderer, Blockly default
+        - `zelos/` - Built-in renderer with rounded blocks
+    - `serialization/` - [Saving and loading](/guides/configure/serialization/) workspace state
+    - `theme/` - Built-in [themes](/guides/configure/appearance/themes/)
+    - `toolbox/` - The [toolbox](/guides/configure/toolboxes/toolbox/) and flyout
+    - `utils/` - Utility functions used throughout core
+- `demos/` - 
+- `generators/` - [Code generators](/guides/create-custom-blocks/code-generation/overview/) for the built-in languages
+- `media/` - Sound effects, cursors, etc.
+- `msg/` - Translated [message strings](/guides/configure/translations/)
+- `scripts/` - 
+- `tests/` - [Unit tests](/guides/contributing/core/testing/unit_testing)
+- `typings/` - Supplemental hand-written type declarations
+
+## Blockly docs
+
+Blockly's documentation is located in `packages/docs`.
+
+### API documentation
+
+Blockly also offers [API reference documentation](/reference/blockly) that details
+the public API code. The API docs are automatically generated from the code itself, 
+so they are another great resource for understanding Blockly's code. 
+
+## Architecture
+
+
+
+
+
+```
+packages/blockly/
+├── blocks/
+├── core/
+│   ├── bubbles/
+│   ├── clipboard/
+│   ├── comments/
+│   ├── dragging/
+│   ├── events/
+│   ├── icons/
+│   ├── inputs/
+│   ├── interfaces/
+│   ├── keyboard_nav/
+│   │   ├── navigation_policies/
+│   │   └── navigators/
+│   ├── renderers/
+│   │   ├── common/
+│   │   ├── geras/
+│   │   ├── measurables/
+│   │   ├── thrasos/
+│   │   └── zelos/
+│   ├── serialization/
+│   ├── theme/
+│   ├── toolbox/
+│   └── utils/
+├── demos/
+├── generators/
+├── media/
+├── msg/
+├── scripts/
+├── tests/
+└── typings/
+```

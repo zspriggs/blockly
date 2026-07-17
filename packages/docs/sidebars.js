@@ -1356,8 +1356,13 @@ const sidebars = {
               items: [
                 {
                   type: 'doc',
+                  label: 'Core tour',
+                  id: 'guides/contribute/core/core-architecture/core-tour',
+                },
+                {
+                  type: 'doc',
                   label: 'Render management',
-                  id: 'guides/contribute/core-architecture/render-management',
+                  id: 'guides/contribute/core/core-architecture/render-management',
                 },
               ],
             },
