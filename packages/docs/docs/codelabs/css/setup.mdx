@@ -1,39 +1,50 @@
 ---
-title: Use CSS in Blockly - Setup
-description: Setup for the CSS in Blockly codelab
+description: Setting up the "Use CSS in Blockly" codelab.
 ---
+
+import Image from '@site/src/components/Image';
 
 # Use CSS in Blockly
 
 ## 2. Setup
 
-### Download the sample code
+### Create the application
 
-You can get the sample code for this code by either downloading the zip here:
+Use the [`npx @blockly/create-package app`](https://www.npmjs.com/package/@blockly/create-package) command to create a standalone application that contains a sample setup of Blockly, including custom blocks and a display of the generated code and output.
 
-[Download zip](https://github.com/RaspberryPiFoundation/blockly/archive/main.zip)
+1. Run `npx @blockly/create-package app css-codelab` in your terminal. This will create a Blockly application in the folder `css-codelab`.
+1. Use `cd` to move into the new directory: `cd css-codelab`.
+1. Run `npm start` to start the server and run the sample application.
+1. The sample app will automatically run in the browser window that opens.
 
-or by cloning this git repo:
+The local address in the address bar of your browser starting with `http://localhost:` shows where your app is.
+If you accidentally close this window or tab, you can re-open this local address to view the app as long as `npm start` is still running.
 
-```bash
-git clone https://github.com/RaspberryPiFoundation/blockly.git
+The initial application uses the default theme and a plain toolbox, and contains no custom CSS.
+
+<Image
+  src="/images/codelabs/css/setup-starter.png"
+  alt="A Blockly workspace with an output pane and a toolbox with multiple categories, all in the default theme."
+  className="codelabImage"
+/>
+
+### Change the storage key
+
+Before setting up the rest of the application, **change the storage key** used for this codelab application. This will ensure that the workspace is saved in its own storage, separate from the regular sample app, so that it doesn't interfere with other demos.
+In `src/serialization.js`, change the value of `storageKey` to some unique string. `cssWorkspace` will work:
+
+```js
+// Use a unique storage key for this codelab
+const storageKey = 'cssWorkspace';
 ```
 
-If you downloaded the source as a zip, unpacking it should give you a root folder named `blockly-main`.
+### Explore the starter code
 
-The relevant files are in `packages/docs/docs/codelabs/css`. There are two versions of the app:
+Take a moment to explore the code you just created in the `css-codelab` folder. If you'd like a more in-depth explanation of all of the code in the sample app, check out the [getting started codelab](/codelabs/getting-started/codelab-overview) which goes through creating this sample app from scratch.
 
-- `starter-code/`: The starter code that you'll build upon in this codelab.
-- `complete-code/`: The code after completing the codelab, in case you get lost or want to compare to your version.
+For a briefer outline of the code, visit the [sample app overview](/guides/get-started/sample-app-overview/) page for an overview of the included files and tooling.
 
-Each folder contains:
+The pieces that matter most for this codelab are:
 
-- `index.html` - A web page containing a simple Blockly workspace.
-- `toolbox.js` - A toolbox with multiple categories.
-- `index.js` - Code to inject a simple workspace.
-
-The `complete-code` folder also contains the `halloween.css` file you'll create.
-
-To run the code, simply open `starter-code/index.html` in a browser. You should see a Blockly workspace with multiple categories.
-
-![A web page with the text 'CSS Codelab' and a Blockly editor with seven categories.](../../../static/images/codelabs/css/setup-starter.png)
+- `src/toolbox.js` - defines the toolbox's categories. You'll add a CSS class to each category so you can target it with a CSS rule.
+- `src/index.js` - injects the workspace. You'll import your new stylesheet here.

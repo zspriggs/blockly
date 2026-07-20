@@ -2,6 +2,8 @@
 description: How to set the display text of a context menu item.
 ---
 
+import Image from '@site/src/components/Image';
+
 # Customizing context menus
 
 ## 8. Display text
@@ -37,9 +39,16 @@ function registerDisplayItem() {
 }
 ```
 
-As usual, remember to call `registerDisplayItem()` from your `start` function.
+As usual, remember to call `registerDisplayItem()` in `src/index.js`, before `Blockly.inject`.
 
 ### Test it
 
-- Reload the workspace and open context menus on various blocks.
+- Refresh the running page and open context menus on various blocks.
 - The last context menu option's text should vary based on the block type.
+
+<Image
+  src="/images/codelabs/context-menu-option/display_text.png"
+  alt='A controls-if block with an open context menu which has "Controls block" as the last item.'
+  width={300}
+  className="codelabImage"
+/>

@@ -6,7 +6,7 @@ import Image from '@site/src/components/Image';
 
 # Customizing a Blockly toolbox
 
-## 3. Change the look of a category
+## 4. Change the look of a category
 
 ### Change the background of the category
 
@@ -22,30 +22,42 @@ addColourBorder_(colour){
 }
 ```
 
-The `colour` passed in is calculated from either the `categorystyle` or the `colour`
-attribute set on the category definition.
+The `colour` passed in is calculated from the `categorystyle` attribute set on the category definition.
 
-For example, the "Logic" category definition looks like:
+For example, you can see in your `toolbox.js` file that the "Logic" category definition looks like:
 
-```xml
-<category name="Logic" categorystyle="logic_category">
-...
-</category>
+```js
+{
+  kind: 'category',
+  name: 'Logic',
+  categorystyle: 'logic_category',
+  ...
+}
 ```
 
-The logic_category style looks like:
+The logic_category style (defined in Blockly's theme) is:
 
-```json
+```js
 "logic_category": {
     "colour": "210"
   }
+```
+
+You can also set the colour directly via the `color` attribute on the category definition.
+
+```json
+{
+  kind: 'category',
+  name: 'Logic',
+  colour: '210',
+}
 ```
 
 For more information on Blockly styles please visit the [themes documentation](/guides/configure/appearance/themes#category-style).
 
 ### Add some CSS
 
-Open `index.html` to see your updated toolbox. Your toolbox should look
+Open your application page to see your updated toolbox. Your toolbox should look
 similar to the below toolbox.
 
 <Image
@@ -56,12 +68,18 @@ similar to the below toolbox.
 
 We are going to add some CSS to make it easier to read, and to space out our categories.
 
-Create a file named `toolbox_style.css` in the same directory as `index.html`
-and include it in `index.html`:
+Create a file named `toolbox_style.css` in the same directory as `index.js`.
+Then, import the new file in `index.js`:
 
+```js
+import './toolbox_style.css';
 ```
-<link rel="stylesheet" href="toolbox_style.css">
-```
+
+:::note
+Importing a `.css` file into a JavaScript file isn't standard JavaScript. It 
+works here because this project's webpack config (`webpack.config.js`) has a 
+rule that bundles and injects `.css` files.
+:::
 
 Copy and paste the following CSS into your `toolbox_style.css` file.
 
@@ -84,7 +102,7 @@ Copy and paste the following CSS into your `toolbox_style.css` file.
 
 ### The result
 
-Open `index.html` to see your toolbox.
+Open the running application to see your toolbox. 
 
 <Image
   src="/images/codelabs/custom-toolbox/styled_toolbox.png"

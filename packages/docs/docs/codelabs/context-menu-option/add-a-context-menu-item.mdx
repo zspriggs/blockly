@@ -26,7 +26,7 @@ We will discuss these in detail in later sections of the codelab.
 
 ### Make a RegistryItem
 
-Add a function to `index.js` named `registerHelloWorldItem`. Create a new registry item in your function:
+Add a function to `src/index.js` named `registerHelloWorldItem`. Create a new registry item in your function:
 
 ```js
 function registerHelloWorldItem() {
@@ -42,18 +42,15 @@ function registerHelloWorldItem() {
 }
 ```
 
-Call your function from `start`:
+Call your function in `src/index.js`, before the UI element setup and `Blockly.inject` call:
 
 ```js
-function start() {
-  registerHelloWorldItem();
+registerHelloWorldItem();
 
-  Blockly.ContextMenuItems.registerCommentOptions();
-  // Create main workspace.
-  workspace = Blockly.inject('blocklyDiv', {
-    toolbox: toolboxSimple,
-  });
-}
+// Set up UI elements and inject Blockly
+const codeDiv = document.getElementById('generatedCode').firstChild;
+// ...
+const ws = Blockly.inject(blocklyDiv, {toolbox});
 ```
 
 ### Register it
@@ -70,12 +67,20 @@ function registerHelloWorldItem() {
 ```
 
 :::note
-you will never need to make a new `ContextMenuRegistry`. Always use the singleton `Blockly.ContextMenuRegistry.registry`.
+You will never need to make a new `ContextMenuRegistry`. Always use the singleton `Blockly.ContextMenuRegistry.registry`.
 :::
+
+### Enable comment context menus
+
+This codelab demonstrates context menus on workspaces, blocks, and comments. Blockly registers the workspace and block options by default, but the comment options (including the **Add Comment** option you'll use to create comments while testing) must be registered separately. Add this call to `src/index.js`, before the `Blockly.inject` call:
+
+```js
+Blockly.ContextMenuItems.registerCommentOptions();
+```
 
 ### Test it
 
-Reload your web page and open a context menu on the workspace (right-click with a mouse, or press `Ctrl+Enter` (Windows) or `Command+Enter` (Mac) if you are navigating Blockly with the keyboard). You should see a new option labeled "Hello World" at the bottom of the context menu.
+Refresh the running page (or run `npm start`) and open a context menu on the workspace (right-click with a mouse, or press `Ctrl+Enter` (Windows) or `Command+Enter` (Mac) if you are navigating Blockly with the keyboard). You should see a new option labeled "Hello World" at the bottom of the context menu.
 
 <Image
   src="/images/codelabs/context-menu-option/hello_world.png"

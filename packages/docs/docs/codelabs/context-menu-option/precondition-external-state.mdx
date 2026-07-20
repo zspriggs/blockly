@@ -2,6 +2,8 @@
 description: How to include a context menu item based on an external condition.
 ---
 
+import Image from '@site/src/components/Image';
+
 # Customizing context menus
 
 ## 5. Precondition: External state
@@ -26,6 +28,10 @@ Use of the `preconditionFn` is not limited to checking the type of the Blockly c
 
 ### Test it
 
-Reload your workspace, check your watch, and open a context menu on the workspace to confirm the timing. The option will always be in the menu, but will sometimes be greyed out.
+Refresh the running page, check your watch, and open a context menu on the workspace to confirm the timing. The option will always be in the menu, but will sometimes be greyed out.
 
-![A context menu. The last option says "Hello World" but the text is grey, indicating that it cannot be selected.](../../../static/images/codelabs/context-menu-option/hello_world_grey.png)
+<Image
+  src="/images/codelabs/context-menu-option/hello_world_grey.png"
+  alt='A context menu. The last option says "Hello World" but the text is grey, indicating that it cannot be selected.'
+  className="codelabImage"
+/>

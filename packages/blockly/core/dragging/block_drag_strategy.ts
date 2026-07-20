@@ -347,15 +347,22 @@ export class BlockDragStrategy implements IDragStrategy {
     // Enable all blocks including children.
     this.enableAllDraggedBlocks(this.block);
 
+    // Cached connection pairs are primarily used for keyboard-driven moves,
+    // but they are also needed in order to determine whether announcement text
+    // must disambiguate between multiple compatible connections. This is a
+    // relatively expensive operation, so we only do it once at the start of
+    // the drag.
+    this.cacheAllConnectionPairs();
+
     // For keyboard-driven moves, cache a list of valid connection points for
     // use in constrained moved mode.
     if (e instanceof KeyboardEvent) {
-      this.cacheAllConnectionPairs();
-
       // Scooch the block to be offset from the connection preview indicator.
+      const initialCandidate = this.getInitialCandidate() ?? undefined;
       const neighbour = this.updateConnectionPreview(
         this.block,
         new Coordinate(0, 0),
+        initialCandidate,
       );
       if (neighbour) {
         this.block.moveDuringDrag(this.determineConnectionOffset());
@@ -380,10 +387,13 @@ export class BlockDragStrategy implements IDragStrategy {
   }
 
   /**
-   * Handles any setup for starting the drag, including disconnecting the block
-   * from any parent blocks.
+   * Caches a list of all valid connection pairs between the dragging block
+   * and any other blocks on the workspace. This is used to determine the
+   * closest valid connection during keyboard-driven moves and to determine
+   * the need to disambiguate between multiple compatible connections when
+   * announcing moves to assistive technologies.
    */
-  private cacheAllConnectionPairs() {
+  cacheAllConnectionPairs() {
     const connectionChecker = this.block.workspace.connectionChecker;
     const workspaceConns = [];
     this.allConnectionPairs = [];
@@ -637,16 +647,18 @@ export class BlockDragStrategy implements IDragStrategy {
    * @param draggingBlock The block being dragged.
    * @param delta How far the pointer has moved from the position
    *     at the start of the drag, in workspace units.
+   * @param initialCandidate If provided, a connection candidate that the
+   *     connection preview indicator will be attached to.
    * @returns The neighbouring connection to which the connection preview will
    *     be attached.
    */
   private updateConnectionPreview(
     draggingBlock: BlockSvg,
     delta: Coordinate,
+    initialCandidate?: ConnectionCandidate,
   ): RenderedConnection | undefined {
     const currCandidate = this.connectionCandidate;
-    const newCandidate =
-      this.getInitialCandidate() ?? this.getConnectionCandidate(delta);
+    const newCandidate = initialCandidate ?? this.getConnectionCandidate(delta);
 
     this.connectionPreviewer?.hidePreview();
     this.connectionCandidate = null;

@@ -46,6 +46,15 @@ const config = {
         docs: {
           routeBasePath: '/',
           sidebarPath: './sidebars.js',
+          exclude: [
+            // Docusaurus defaults (re-listed because setting `exclude` replaces them)
+            '**/_*.{js,jsx,ts,tsx,md,mdx}',
+            '**/_*/**',
+            '**/*.test.{js,jsx,ts,tsx}',
+            '**/__tests__/**',
+
+            '**/complete-code/**',
+          ],
           showLastUpdateTime: true,
           editUrl:
             'https://github.com/RaspberryPiFoundation/blockly/tree/main/packages/docs',

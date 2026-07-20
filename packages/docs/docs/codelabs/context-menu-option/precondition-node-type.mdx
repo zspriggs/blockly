@@ -2,6 +2,8 @@
 description: How to include a context menu item based on the node type.
 ---
 
+import Image from '@site/src/components/Image';
+
 # Customizing context menus
 
 ## 4 . Precondition: Node type
@@ -42,4 +44,8 @@ Notice that the code tests for where context menus are allowed, rather than wher
 
 Open a context menu on the workspace, a block, and a comment. You should see a "Hello World" option on the workspace and block context menus, but not on the comment context menu.
 
-![An if block with a context menu with five options. The last option says "Hello World".](../../../static/images/codelabs/context-menu-option/hello_world_block.png)
+<Image
+  src="/images/codelabs/context-menu-option/hello_world_block.png"
+  alt='An if block with a context menu with five options. The last option says "Hello World".'
+  className="codelabImage"
+/>

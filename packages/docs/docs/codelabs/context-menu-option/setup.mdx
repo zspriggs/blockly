@@ -8,34 +8,30 @@ import Image from '@site/src/components/Image';
 
 ## 2. Setup
 
-### Download the sample code
+### Create the application
 
-You can get the sample code for this code by either downloading the zip here:
+Use the [`npx @blockly/create-package app`](https://www.npmjs.com/package/@blockly/create-package) command to create a standalone application that contains a sample setup of Blockly, including custom blocks and a display of the generated code and output.
 
-[Download zip](https://github.com/RaspberryPiFoundation/blockly/archive/main.zip)
+1. Run `npx @blockly/create-package app context-menu-option-codelab` in your terminal. This will create a Blockly application in the folder `context-menu-option-codelab`.
+1. Use `cd` to move into the new directory: `cd context-menu-option-codelab`.
+1. Run `npm start` to start the server and run the sample application.
+1. The sample app will automatically run in the browser window that opens.
 
-or by cloning this git repo:
+The local address in the address bar of your browser starting with `http://localhost:` shows where your app is. If you accidentally close this window or tab, you can re-open this local address to view the app as long as `npm start` is still running.
 
-```bash
-git clone https://github.com/RaspberryPiFoundation/blockly.git
+### Change the storage key
+
+Before setting up the rest of the application, change the storage key used for this codelab application. This will ensure that the workspace is saved in its own storage, separate from the regular sample app, so that it doesn't interfere with other demos.
+
+In `serialization.js`, change the value of `storageKey` to some unique string. `contextMenuWorkspace` will work:
+
+```js
+// Use a unique storage key for this codelab
+const storageKey = 'contextMenuWorkspace';
 ```
 
-If you downloaded the source as a zip, unpacking it should give you a root folder named `blockly-main`.
+### Explore the starter code
 
-The relevant files are in `packages/docs/docs/codelabs/context-menu-option`. There are two versions of the app:
+Take a moment to explore the code you just created in the `context-menu-option-codelab` folder. If you'd like a more in-depth explanation of all of the code in the sample app, check out the [getting started codelab](/codelabs/getting-started/codelab-overview) which goes through creating this sample app from scratch.
 
-- `starter-code/`: The starter code that you'll build upon in this codelab.
-- `complete-code/`: The code after completing the codelab, in case you get lost or want to compare to your version.
-
-Each folder contains:
-
-- `index.js` - The codelab's logic. To start, it just injects a simple workspace.
-- `index.html` - A web page containing a simple blockly workspace.
-
-To run the code, simple open `starter-code/index.html` in a browser. You should see a Blockly workspace with an always-open flyout.
-
-<Image
-  src="/images/codelabs/context-menu-option/starter_workspace.png"
-  alt='A web page with the text "Context Menu Codelab" and a simple Blockly workspace.'
-  className="codelabImage"
-/>
+For a briefer outline of the code, visit the [sample app overview](/guides/get-started/sample-app-overview/) page for an overview of the included files and tooling.

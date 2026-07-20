@@ -6,7 +6,7 @@ import Image from '@site/src/components/Image';
 
 # Customizing a Blockly toolbox
 
-## 7. Adding a custom toolbox item
+## 8. Adding a custom toolbox item
 
 In the previous sections we modified the toolbox by extending the base category class.
 In this section we will make a completely new toolbox item and add it to our toolbox.
@@ -15,49 +15,64 @@ For this example, we are going to create a toolbox label.
 
 ### Setup
 
-In the same directory as `index.html` create a new file named `toolbox_label.js`.
-
-Include this file in `index.html`:
-
-```html
-<script src="toolbox_label.js"></script>
-```
-
-Create a class in `toolbox_label.js` that extends `Blockly.ToolboxItem`
-and register it.
+In the same directory as `index.js` create a new file named `toolbox_label.js`.
+Create a class in `toolbox_label.js` that extends `Blockly.ToolboxItem` and create a function to register it.
 
 ```js
+import * as Blockly from 'blockly';
+
 class ToolboxLabel extends Blockly.ToolboxItem {
-  constructor(toolboxItemDef, parentToolbox) {
-    super(toolboxItemDef, parentToolbox);
-  }
+  // You'll add functions to this class soon
+
 }
 
-Blockly.registry.register(
-  Blockly.registry.Type.TOOLBOX_ITEM,
-  'toolboxlabel',
-  ToolboxLabel,
-);
+export function registerToolboxLabel() {
+  Blockly.registry.register(
+    Blockly.registry.Type.TOOLBOX_ITEM,
+    'toolboxlabel',
+    ToolboxLabel,
+  );
+}
 ```
 
+As with the custom category, you'll also need to import the registration function in `index.js`.
+To register the toolbox label, call the `registerToolboxLabel()` function in `index.js`, just after registering the custom category:
+
+```js
+import { registerToolboxLabel } from './toolbox_label.js';
+
+...
+
+// Register the custom category
+registerCustomCategory();
+// Register the toolbox label
+registerToolboxLabel();
+```
 By registering this toolbox item with the name "toolboxlabel" we can now use this
 name in our toolbox definition to add our custom item to the toolbox.
 
-Navigate to `index.html`, and scroll down to the toolbox definition. Add a
-`<toolboxlabel>` element as the first item in your toolbox definition:
+Navigate to `toolbox.js`, and add a `toolboxlabel` as the first item in the list 
+of toolbox contents:
 
-```xml
-<toolboxlabel></toolboxlabel>
+```js
+{
+  kind: 'toolboxlabel',
+}
 ```
 
 Your toolbox definition should now look something like:
 
-```xml
-<xml xmlns="https://developers.google.com/blockly/xml" id="toolbox-categories" style="display: none">
-<toolboxlabel></toolboxlabel>
-<category css-icon="customIcon fa fa-cog" name="Logic" categorystyle="logic_category">
-...
-</xml>
+```js
+export const toolbox = {
+  kind: 'categoryToolbox',
+  contents: [
+    {
+      kind: 'toolboxlabel',
+    },
+    { kind: 'category', name: 'Logic', /* etc */ },
+  // ...
+  ]
+}
 ```
 
 ### Initialize the toolbox item
@@ -70,17 +85,27 @@ There are three different types of toolbox item interfaces:
 Since we do not need our label to be selectable or collapsible, we can implement
 the basic `IToolboxItem` interface.
 
-First, we are going to add an init method that will create the dom for our toolbox label:
+First, we are going to add an init method to the `ToolboxLabel` class that will create the dom for our toolbox label:
 
 ```js
   /** @override */
   init() {
     // Create the label.
     this.label = document.createElement('label');
+    // Set ARIA role and description, so that screenreaders can see and read the label
+    Blockly.utils.aria.setRole(this.label, Blockly.utils.aria.Role.TREEITEM);
+    Blockly.utils.aria.setState(
+      this.label,
+      Blockly.utils.aria.State.ROLEDESCRIPTION,
+      'Label',
+    );
     // Set the name.
     this.label.textContent = 'Label';
   }
 ```
+
+The `init()` function defined above includes setting the ARIA role and state for 
+screenreader support. To learn more, see the [screenreader support doc].(/guides/configure/screen-reader/)
 
 Next, we are going to return this element:
 
@@ -91,11 +116,11 @@ Next, we are going to return this element:
   }
 ```
 
-If you open the `index.html` file you should see a label above your first category.
+If you refresh the app page you should see a label above your first category.
 
 <Image
   src="/images/codelabs/custom-toolbox/toolbox_label.png"
-  alt="The toolbox with a label at the top."
+  alt='The toolbox with a label at the top that says "Label."'
   className="codelabImage"
 />
 
@@ -106,11 +131,18 @@ label with the text "Label".
 To make it possible to create different labels with different text and colour we
 are going to add `name` and `colour` attributes to our toolbox definition.
 
-Open `index.html` and navigate to the toolbox definition. Change your
-`toolboxlabel` element to look like the below line:
+Open `toolbox.js`. Add a `name` and `colour` to your toolbox label
 
-```xml
-<toolboxlabel name="Custom Toolbox" colour="darkslategrey"></toolboxlabel>
+```js
+contents: [
+  {
+    kind: 'toolboxlabel',
+    name: 'Custom Toolbox',
+    colour: 'darkslategrey',
+  },
+  { kind: 'category', name: 'Logic', /* etc */ },
+  // ...
+]
 ```
 
 These values will get passed in to our `ToolboxLabel` class through the `toolboxItemDef`.
@@ -132,7 +164,7 @@ this.label.textContent = 'Label';
 All attributes on our toolbox definition get added to the `toolboxItemDef_`.
 `this.toolboxItemDef_` is set in the `Blockly.ToolboxItem` constructor.
 
-Open your `index.html` in a browser to see the updated label.
+Refresh your app in a browser to see the updated label.
 
 <Image
   src="/images/codelabs/custom-toolbox/custom_label.png"
@@ -145,21 +177,27 @@ Open your `index.html` in a browser to see the updated label.
 Similar to how we added `colour` and `name` above, we are going to add a custom
 class to our label.
 
-Navigate to your toolbox definition in `index.html` and modify it to look
-like the below line.
+Navigate to your toolbox definition in `toolbox.js` and add the `cssconfig`.
 
-```xml
-<toolboxlabel name="Custom Toolbox" colour="darkslategrey" css-label="customLabel"></toolboxlabel>
+```js
+contents: [
+  {
+    kind: 'toolboxlabel',
+    name: 'Custom Toolbox',
+    colour: 'darkslategrey',
+    cssconfig: { label: 'customLabel' },
+  },
+  { kind: 'category', name: 'Logic', /* etc */ },
+  // ...
+]
 ```
 
-Any item that begins with `css-` will be added to a `cssconfig` object stored on
-the `toolboxItemDef`.
+This gets added to a `cssconfig` object stored on the `toolboxItemDef`.
 
 To use this value navigate to `toolbox_label.js` and add the following lines to
 your `init` method.
 
 ```js
-// Any attributes that begin with css- will get added to a cssconfig object.
 const cssConfig = this.toolboxItemDef_['cssconfig'];
 // Add the class.
 if (cssConfig) {
@@ -178,11 +216,11 @@ the below CSS to make the label bold.
 
 ### The result
 
-If you open `index.html` you should now see a bold dark gray label at the
+If you refresh your app you should now see a bold dark gray label at the
 top of your toolbox.
 
 <Image
   src="/images/codelabs/custom-toolbox/final_toolbox.png"
-  alt="A toolbox with colored background and the blockly label above the category text."
+  alt="The toolbox with a label that is now bolded."
   className="codelabImage"
 />

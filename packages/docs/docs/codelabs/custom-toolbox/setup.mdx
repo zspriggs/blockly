@@ -8,92 +8,34 @@ import Image from '@site/src/components/Image';
 
 ## 2. Setup
 
-### Download the sample code
+### Create the application
 
-You can get the sample code for this codelab by either downloading the zip here:
+Use the [`npx @blockly/create-package app`](https://www.npmjs.com/package/@blockly/create-package) command to create a standalone application that contains a sample setup of Blockly, including custom blocks and a display of the generated code and output.
 
-[Download zip](https://github.com/RaspberryPiFoundation/blockly/archive/main.zip)
+1. Run `npx @blockly/create-package app custom-toolbox-codelab` in your terminal. This will create a Blockly application in the folder `custom-toolbox-codelab`.
+1. Use `cd` to move into the new directory: `cd custom-toolbox-codelab`.
+1. Run `npm start` to start the server and run the sample application.
+1. The sample app will automatically run in the browser window that opens.
 
-or by cloning this git repo:
+The local address in the address bar of your browser starting with `http://localhost:` shows where your app is.
+If you accidentally close this window or tab, you can re-open this local address to view the app as long as `npm start` is still running.
 
-```bash
-git clone https://github.com/RaspberryPiFoundation/blockly.git
-```
+The initial application has a toolbox definition included in the `toolbox.js` file. 
+This codelab focuses on customizing the *appearance* of a Blockly toolbox rather than the content and categories, but feel free to experiment with customizing the content of the toolbox in `toolbox.js`.   
 
-If you downloaded the source as a zip, unpacking it should give you a root folder named `blockly-main`.
+### Change the storage key
 
-The relevant files are in `packages/docs/docs/codelabs/custom-toolbox`. There are two versions of the app:
+Before setting up the rest of the application, **change the storage key** used for this codelab application. This will ensure that the workspace is saved in its own storage, separate from the regular sample app, so that it doesn't interfere with other demos. 
 
-- `starter-code/`: The starter code that you'll build upon in this codelab.
-- `complete-code/`: The code after completing the codelab, in case you get lost or want to compare to your version.
-
-Each folder contains:
-
-- `index.js` - The codelab's logic. To start, it just injects a simple workspace.
-- `index.html` - A web page containing a simple blockly workspace.
-
-To run the code, simply open `starter-code/index.html` in a browser. You should see a Blockly workspace with a toolbox.
-
-![A web page with the text "Toolbox Customization Codelab" and a Blockly workspace.](../../../static/images/codelabs/custom-toolbox/starter_workspace.png)
-
-### Define and register a custom category
-
-To start, create a file named `custom_category.js` in the `starter-code`
-directory. Include your new file by adding a script tag to `index.html`.
-
-```html
-<script src="custom_category.js"></script>
-```
-
-In order to create a custom category we will create a new category that extends
-the default `Blockly.ToolboxCategory` class. Add the following code to your
-`custom_category.js` file.
+In `serialization.js`, change the value of `storageKey` to some unique string. `customToolboxWorkspace` will work:
 
 ```js
-class CustomCategory extends Blockly.ToolboxCategory {
-  /**
-   * Constructor for a custom category.
-   * @override
-   */
-  constructor(categoryDef, toolbox, opt_parent) {
-    super(categoryDef, toolbox, opt_parent);
-  }
-}
+// Use a unique storage key for this codelab
+const storageKey = 'customToolboxWorkspace';
 ```
 
-After defining your category you need to tell Blockly that it exists.
-Register your category by adding the below code to the end of `custom_category.js`.
+### Explore the starter code
 
-```js
-Blockly.registry.register(
-  Blockly.registry.Type.TOOLBOX_ITEM,
-  Blockly.ToolboxCategory.registrationName,
-  CustomCategory,
-  true,
-);
-```
+Take a moment to explore the code you just created in the `custom-toolbox-codelab` folder. If you'd like a more in-depth explanation of all of the code in the sample app, check out the [getting started codelab](/codelabs/getting-started/codelab-overview) which goes through creating this sample app from scratch.  
 
-By registering our `CustomCategory` with `Blockly.ToolboxCategory.registrationName`
-we are overriding the default category in Blockly. Because we are overriding a
-toolbox item instead of adding a new one, we must pass in `true` as the last
-argument. If this flag is `false`, `Blockly.registry.register` will throw
-an error because we are overriding an existing class.
-
-### The result
-
-To test, open `index.html` in a browser. Your toolbox should look the same as it
-did before.
-
-<Image
-  src="/images/codelabs/custom-toolbox/base_toolbox.png"
-  alt="The default toolbox. A list of categories with a strip of colour to the left."
-  className="codelabImage"
-/>
-
-However, if you run the below commands in your console you will see that
-your toolbox is now using the `CustomCategory` class.
-
-```js
-var toolbox = Blockly.common.getMainWorkspace().getToolbox();
-toolbox.getToolboxItems()[0];
-```
+For a briefer outline of the code, visit the [sample app overview](/guides/get-started/sample-app-overview/) page for an overview of the included files and tooling. 
