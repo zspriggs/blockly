@@ -85,17 +85,13 @@ suite('Toasts', function () {
   });
 
   test('are shown for the designated duration', function () {
-    const clock = sinon.useFakeTimers();
-
     const message = 'texas toast';
     Blockly.Toast.show(this.workspace, {message, duration: 3});
     for (let i = 0; i < 3; i++) {
       assert.isTrue(this.toastIsVisible(message));
-      clock.tick(1000);
+      this.clock.tick(1000);
     }
     assert.isFalse(this.toastIsVisible(message));
-
-    clock.restore();
   });
 
   test('toast announces message with status role and polite assertiveness', function () {

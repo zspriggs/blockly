@@ -7,6 +7,7 @@ import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 import {defineConfig} from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
+import eslintConfigPrettier from 'eslint-config-prettier';
 
 // These rules are no longer supported, but the Google style package we depend
 // on hasn't been updated in years to remove them, even though they have been
@@ -144,6 +145,11 @@ export default defineConfig(
       'packages/**/build/',
       'packages/**/dist/',
       // Core Build artifacts
+      // All Packages
+      'packages/*/node_modules/**',
+      'packages/**/build/',
+      'packages/**/dist/',
+      // Core Build artifacts
       'packages/blockly/msg/*',
       'packages/blockly/typings/*',
       'packages/blockly/docs/*',
@@ -174,44 +180,12 @@ export default defineConfig(
   jsdoc.configs['flat/recommended'],
   {
     files: ['packages/blockly/**/*.ts', 'packages/blockly/**/*.tsx', 'packages/blockly/**/*.js'],
+    languageOptions: {
+      ecmaVersion: 2020,
+      sourceType: 'module',
+    },
     extends: [eslint.configs.recommended, googleStyle],
-    languageOptions: {
-      ecmaVersion: 2020,
-      sourceType: 'module',
-    },
-    settings: {
-      // Allowlist some JSDoc tag aliases we use.
-      'jsdoc': {
-        'tagNamePreference': {
-          'return': 'return',
-          'fileoverview': 'fileoverview',
-          'extends': 'extends',
-          'constructor': 'constructor',
-        },
-      },
-    },
-    rules,
-    // Per the docs, this should be at the end because it disables rules that
-    // conflict with Prettier.
     ...eslintPluginPrettierRecommended,
-  },
-  {
-    languageOptions: {
-      ecmaVersion: 2020,
-      sourceType: 'module',
-    },
-    settings: {
-      // Allowlist some JSDoc tag aliases we use.
-      'jsdoc': {
-        'tagNamePreference': {
-          'return': 'return',
-          'fileoverview': 'fileoverview',
-          'extends': 'extends',
-          'constructor': 'constructor',
-        },
-      },
-    },
-    rules,
   },
   {
     files: [
@@ -353,9 +327,41 @@ export default defineConfig(
     },
   },
   {
-    files: ['packages/plugins/theme-*/**'],
+    files: [
+      'packages/plugins/theme-*/**',
+      'packages/plugins/dev-tools/**'
+    ],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.commonjs,
+        ...globals.node,
+        ...globals.es5,
+        Blockly: true,
+        goog: true,
+        monaco: true,
+        dat: true,
+      },
+    },
+    linterOptions: {
+      reportUnusedDisableDirectives: true,
+    },
+    plugins: {
+      jsdoc,
+    },
+    settings: {
+      jsdoc: {
+        tagNamePreference: {
+          returns: 'returns',
+        },
+        mode: 'closure',
+      },
+    },
     rules: {
-            'no-invalid-this': 'off',
+      // http://eslint.org/docs/rules/
+      'camelcase': 'warn',
+      'new-cap': ['error', {capIsNewExceptionPattern: '^.*Error'}],
+      'no-invalid-this': 'off',
       // valid-jsdoc does not work properly for interface methods.
       // https://github.com/eslint/eslint/issues/9978
       'valid-jsdoc': 'off',
@@ -395,6 +401,20 @@ export default defineConfig(
         },
       ],
     }
+  },
+  {
+    settings: {
+      // Allowlist some JSDoc tag aliases we use.
+      'jsdoc': {
+        'tagNamePreference': {
+          'return': 'return',
+          'fileoverview': 'fileoverview',
+          'extends': 'extends',
+          'constructor': 'constructor',
+        },
+      },
+    },
+    rules,
   },
   ...tseslint.config(
     buildTSOverride({

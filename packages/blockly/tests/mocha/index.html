@@ -188,7 +188,7 @@
           },
           reportFailure(error) {
             const message =
-              error instanceof Error ? error.message : String(error);
+              error instanceof Error ? error.message : JSON.stringify(error);
             this.errors.push(message);
             reportLoadFailure('Failed to load Blockly or tests: ' + message);
           },
