@@ -660,7 +660,6 @@ export class BlockDragStrategy implements IDragStrategy {
     const currCandidate = this.connectionCandidate;
     const newCandidate = initialCandidate ?? this.getConnectionCandidate(delta);
 
-    this.connectionPreviewer?.hidePreview();
     this.connectionCandidate = null;
     if (!newCandidate) {
       // Position above or below the first/last block.
@@ -669,13 +668,19 @@ export class BlockDragStrategy implements IDragStrategy {
           currCandidate?.neighbour.getSourceBlock() ?? null;
         let root = connectedBlock?.getRootBlock() ?? connectedBlock;
         if (root === draggingBlock) root = connectedBlock;
-        if (!root) return;
+        if (!root) {
+          this.connectionPreviewer?.hidePreview();
+          return;
+        }
 
         const blockRects = draggingBlock.workspace
           .getTopBlocks()
           .filter((block) => block !== draggingBlock.getRootBlock())
           .map((block) => block.getBoundingRectangle());
-        if (!blockRects.length) return;
+        if (!blockRects.length) {
+          this.connectionPreviewer?.hidePreview();
+          return;
+        }
 
         // If the block was previously connected, position the block near its previous connection.
         const destinationX =
@@ -706,6 +711,7 @@ export class BlockDragStrategy implements IDragStrategy {
           new Coordinate(destinationX, destinationY),
         );
       }
+      this.connectionPreviewer?.hidePreview();
       return;
     }
     const candidate =
