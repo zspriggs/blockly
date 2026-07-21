@@ -4,6 +4,13 @@
 eslint.config.mjs
 package.json
 
+# Package build aritifacts, etc.
+**/dist/*
+**/build/*
+**/node_modules/*
+**/package-lock.json
+**/CHANGELOG.md
+
 # Core: Build Artifacts
 packages/blockly/msg/*
 packages/blockly/build/*

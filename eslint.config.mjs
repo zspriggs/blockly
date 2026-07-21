@@ -139,13 +139,15 @@ export default defineConfig(
   {
     // Note: there should be no other properties in this object
     ignores: [
-      // Build artifacts
+      // All Packages
+      'packages/*/node_modules/**',
+      'packages/**/build/',
+      'packages/**/dist/',
+      // Core Build artifacts
       'packages/blockly/msg/*',
-      'packages/blockly/build/*',
-      'packages/blockly/dist/*',
       'packages/blockly/typings/*',
       'packages/blockly/docs/*',
-      // Tests other than mocha unit tests
+      // Core Tests other than mocha unit tests
       'packages/blockly/tests/blocks/*',
       'packages/blockly/tests/themes/*',
       'packages/blockly/tests/compile/*',
@@ -155,8 +157,7 @@ export default defineConfig(
       'packages/blockly/tests/screenshot/*',
       'packages/blockly/tests/test_runner.js',
       'packages/blockly/tests/workspace_svg/*',
-      // Demos, scripts, misc
-      'packages/blockly/node_modules/*',
+      // Core Demos, scripts, misc
       'packages/blockly/generators/*',
       'packages/blockly/demos/*',
       'packages/blockly/appengine/*',
@@ -167,9 +168,7 @@ export default defineConfig(
       'packages/blockly/PULL_REQUEST_TEMPLATE.md',
       // Docs
       'packages/docs/docs/reference/**',
-      'packages/docs/build/**',
       'packages/docs/.docusaurus/**',
-      'packages/docs/node_modules/**',
     ],
   },
   jsdoc.configs['flat/recommended'],
@@ -352,6 +351,50 @@ export default defineConfig(
       ...mdx.flatCodeBlocks.rules,
       'mdx/remark': 'off',
     },
+  },
+  {
+    files: ['packages/plugins/theme-*/**'],
+    rules: {
+            'no-invalid-this': 'off',
+      // valid-jsdoc does not work properly for interface methods.
+      // https://github.com/eslint/eslint/issues/9978
+      'valid-jsdoc': 'off',
+      // https://github.com/gajus/eslint-plugin-jsdoc#eslint-plugin-jsdoc-rules
+      'require-jsdoc': 'off',
+      'jsdoc/newline-after-description': 'off',
+      // This should warn instead, but it's broken for long record type params.
+      'jsdoc/require-description-complete-sentence': 'off',
+      'jsdoc/require-returns': [
+        'error',
+        {
+          forceRequireReturn: false,
+        },
+      ],
+      'jsdoc/require-description': [
+        'warn',
+        {
+          // Don't require descriptions if these tags are present.
+          exemptedBy: ['inheritdoc', 'param', 'return', 'returns', 'type'],
+        },
+      ],
+      'jsdoc/check-tag-names': 'off',
+      'jsdoc/check-access': 'warn',
+      'jsdoc/check-types': 'off',
+      'jsdoc/check-values': 'off',
+      'jsdoc/reject-any-type': 'off',
+      'jsdoc/reject-function-type': 'off',
+      'jsdoc/require-jsdoc': [
+        'warn',
+        {
+          enableFixer: false,
+          require: {
+            FunctionDeclaration: true,
+            ClassDeclaration: true,
+            MethodDefinition: true,
+          },
+        },
+      ],
+    }
   },
   ...tseslint.config(
     buildTSOverride({

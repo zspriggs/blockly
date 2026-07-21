@@ -25,5 +25,16 @@ module.exports = {
         'plugins': ['prettier-plugin-organize-imports'],
       },
     },
+    {
+      files: ['packages/plugins/theme-*/**/*'],
+      options: {
+        // Some properties must be quoted to preserve closure compiler behavior.
+        // If at least one property in an object requires quotes, quote all 
+        // properties.
+        quoteProps: 'consistent',
+        // Don't add spaces around braces for object literals.
+        bracketSpacing: false,
+      },
+    },
   ],
 };

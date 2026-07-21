@@ -17,7 +17,9 @@
   "author": "Raspberry Pi Foundation",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/blockly",
+    "packages/docs",
+    "packages/plugins/*"
   ],
   "devDependencies": {
     "@commitlint/cli": "^21.2.1",
@@ -36,7 +38,8 @@
   "scripts": {
     "test": "npm run test --ws --if-present",
     "lint": "npm run lint --ws --if-present",
-    "build": "npm run build --ws --if-present",
+    "lint:fix": "npm run lint:fix --ws --if-present",
+    "build": "npm run package --workspace=blockly && npm run build --ws --if-present",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "postinstall": "patch-package"

@@ -175,6 +175,16 @@ function packageJSON(done) {
   const json = JSON.parse(JSON.stringify(getPackageJson()));
   // Remove unwanted entries.
   delete json['scripts'];
+  // Update exports to match how the package will be structured
+  const exports = json['exports'];
+  if (exports) {
+    for (const exportKey in exports) {
+      const exportObj = exports[exportKey];
+      for (const pathKey in exportObj) {
+        exportObj[pathKey] = exportObj[pathKey].replace('./dist', '.')
+      }
+    }
+  }
   // Set "type": "commonjs", since that's what .js files in the
   // package root are.  This should be a no-op since that's the
   // default, but by setting it explicitly we ensure that any chage to
