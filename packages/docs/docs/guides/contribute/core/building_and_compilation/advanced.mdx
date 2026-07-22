@@ -6,14 +6,6 @@ image: images/blockly_banner.png
 
 # Advanced compilation
 
-:::warning
-Unless you are modifying the Blockly source code directly, you probably
-don't need to build Blockly run any of the scripts documented below yourself.
-Instead, follow the instructions in [the "Get the Code"
-section](/guides/get-started/get-the-code#get-the-code-1) of the [Get Started](/guides/get-started/get-the-code) page to install [the `blockly` NPM package](https://www.npmjs.com/package/blockly) or download the `.tgz` file attached to
-[the latest release on GitHub](https://github.com/RaspberryPiFoundation/blockly/releases/latest).
-:::
-
 The regular [build process](/guides/contribute/core/building) uses Google's online JavaScript compiler to reduce Blockly to a half a dozen files totaling about 720kb (160kb zipped). Alternatively one can use the Google's offline JavaScript compiler in "advanced compilation" mode which has a number of advantages:
 
 - Total Blockly size reduced to 300kb (100kb zipped) due to tree shaking.
