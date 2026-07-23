@@ -1392,11 +1392,6 @@ const sidebars = {
               id: 'guides/contribute/core/localization_and_translation',
             },
             {
-              type: 'doc',
-              label: 'Klingon',
-              id: 'guides/contribute/core/klingon',
-            },
-            {
               type: 'category',
               label: 'Testing',
               items: [
