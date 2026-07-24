@@ -57,7 +57,7 @@
 /guides/modify/web/unit-testing   /guides/contribute/core/testing/unit_testing/   301
 /guides/modify/web/*   /guides/contribute/core/   301
 
-# Reorganize contribute/core docs (2026)
+# Reorganize contribute docs
 /guides/contribute/core/advanced   /guides/contribute/core/building_and_compilation/advanced/   301
 /guides/contribute/core/building   /guides/contribute/core/building_and_compilation/building/   301
 /guides/contribute/core-architecture/render-management   /guides/contribute/core/core-architecture/render-management/   301
