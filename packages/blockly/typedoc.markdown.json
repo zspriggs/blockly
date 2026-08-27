@@ -1,0 +1,56 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+
+  "entryPoints": ["core/blockly.ts"],
+  "tsconfig": "./tsconfig.json",
+  "excludeInternal": true,
+  "excludePrivate": true,
+  "includeVersion": true,
+  "skipErrorChecking": true,
+
+  "sort": ["kind", "source-order"],
+  "groupOrder": [
+    "Classes",
+    "Enumerations",
+    "Functions",
+    "Interfaces",
+    "Namespaces",
+    "Variables",
+    "Type Aliases",
+    "Constructors",
+    "Properties",
+    "Accessors",
+    "Methods",
+    "*"
+  ],
+
+  "router": "property-pages",
+
+  "plugin": [
+    "typedoc-plugin-markdown",
+    "typedoc-docusaurus-theme",
+    "typedoc-plugin-frontmatter",
+    "./typedoc-property-pages.mjs"
+  ],
+  "frontmatterNamingConvention": "snakeCase",
+  "indexFrontmatter": {
+    "title": "API Reference",
+    "sidebar_label": "Overview"
+  },
+
+  "indexFormat": "table",
+  "classPropertiesFormat": "table",
+  "propertyMembersFormat": "list",
+  "interfacePropertiesFormat": "table",
+  "enumMembersFormat": "table",
+  "typeDeclarationFormat": "table",
+  "parametersFormat": "table",
+  "tableColumnSettings": {
+    "hideDefaults": true,
+    "hideOverrides": true,
+    "hideInherited": true,
+    "hideSources": true,
+    "leftAlignHeaders": true
+  },
+  "useCodeBlocks": true
+}

@@ -1,11 +1,52 @@
 // @ts-nocheck
 
+// EXPERIMENT: docusaurus-plugin-typedoc writes typedoc-sidebar.cjs alongside
+// the generated reference docs, replacing the hand-rolled _reference.js that
+// createReferenceSidebar() used to build by scraping blockly.mdx.
+// TypeDoc's sidebar contains only the kind categories (Classes, Enums, ...) —
+// not the reference landing page. Docusaurus only shows a sidebar on docs that
+// belong to one, so /reference/ would render bare without this entry.
+// Member groups whose pages should stay OUT of the visible sidebar. They must
+// remain in the sidebar *data* — Docusaurus marks the whole ancestor chain
+// active, which is what keeps "FieldCheckbox" highlighted while you are on
+// FieldCheckbox/properties/DEFAULT_VALUE. Dropping them from the tree would
+// lose that. So they are tagged instead, and custom.css hides the tagged nodes.
+// Same trick the api-documenter pipeline used via its "hide-level-3" class,
+// just at a different depth: TypeDoc adds a "Properties" grouping, so the node
+// to hide is a category, not a level-3 link.
+const HIDDEN_MEMBER_GROUPS = new Set([
+  'Properties',
+  'Methods',
+  'Accessors',
+  'Constructors',
+]);
+
+function hideMemberGroups(items) {
+  return items.map((item) => {
+    if (item?.type !== 'category') return item;
+    return {
+      ...item,
+      ...(HIDDEN_MEMBER_GROUPS.has(item.label) && {
+        className: 'sidebar-hidden-member-group',
+      }),
+      items: hideMemberGroups(item.items ?? []),
+    };
+  });
+}
+
 let referenceSidebar = [];
 try {
-  referenceSidebar = require('./docs/reference/_reference.js').referenceSidebar;
+  referenceSidebar = [
+    {
+      type: 'doc',
+      id: 'reference/index',
+      label: 'Overview',
+    },
+    ...hideMemberGroups(require('./docs/reference/typedoc-sidebar.cjs')),
+  ];
 } catch {
   console.warn(
-    'Reference sidebar not found — run "npm run docs" in packages/blockly to generate it.',
+    'Reference sidebar not found — it is generated on the first Docusaurus build.',
   );
 }
 
