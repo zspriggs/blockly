@@ -36,5 +36,7 @@
     "sidebar_label": "Overview"
   },
 
+  "indexFormat": "table",
+  "parametersFormat": "table",
   "useCodeBlocks": true
 }
