@@ -1,11 +1,24 @@
 // @ts-nocheck
 
+// EXPERIMENT: docusaurus-plugin-typedoc writes typedoc-sidebar.cjs alongside
+// the generated reference docs, replacing the hand-rolled _reference.js that
+// the api-documenter pipeline built by scraping blockly.mdx.
+// TypeDoc's sidebar contains only the kind categories (Classes, Enums, ...) —
+// not the reference landing page. Docusaurus only shows a sidebar on docs that
+// belong to one, so /reference/ would render bare without the Overview entry.
 let referenceSidebar = [];
 try {
-  referenceSidebar = require('./docs/reference/_reference.js').referenceSidebar;
+  referenceSidebar = [
+    {
+      type: 'doc',
+      id: 'reference/index',
+      label: 'Overview',
+    },
+    ...require('./docs/reference/typedoc-sidebar.cjs'),
+  ];
 } catch {
   console.warn(
-    'Reference sidebar not found — run "npm run docs" in packages/blockly to generate it.',
+    'Reference sidebar not found — it is generated on the first Docusaurus build.',
   );
 }
 

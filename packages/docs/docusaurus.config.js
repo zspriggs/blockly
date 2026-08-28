@@ -71,6 +71,28 @@ const config = {
     ],
   ],
 
+  // EXPERIMENT: generate the API reference with TypeDoc instead of
+  // api-extractor + api-documenter. Runs as part of the Docusaurus build,
+  // and emits docs/reference/typedoc-sidebar.cjs for sidebars.js to consume.
+  plugins: [
+    [
+      'docusaurus-plugin-typedoc',
+      {
+        // All TypeDoc tuning lives in the file below, so you can edit options
+        // and re-run TypeDoc WITHOUT touching this file. Saving this file
+        // restarts the whole Docusaurus dev server (and re-runs TypeDoc
+        // synchronously, which is what makes Ctrl-C unresponsive).
+        //
+        //   npx typedoc --options packages/blockly/typedoc.markdown.json \
+        //     --out packages/docs/docs/reference
+        //
+        // Docusaurus hot-reloads the regenerated markdown like any content.
+        options: '../blockly/typedoc.markdown.json',
+        out: 'docs/reference',
+      },
+    ],
+  ],
+
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+
+  "entryPoints": ["core/blockly.ts"],
+  "tsconfig": "./tsconfig.json",
+  "excludeInternal": true,
+  "excludePrivate": true,
+  "includeVersion": true,
+  "skipErrorChecking": true,
+  "sourceLinkTemplate": "https://github.com/RaspberryPiFoundation/blockly/blob/{gitRevision}/{path}#L{line}",
+
+  "sort": ["kind", "source-order"],
+  "groupOrder": [
+    "Classes",
+    "Enumerations",
+    "Functions",
+    "Interfaces",
+    "Namespaces",
+    "Variables",
+    "Type Aliases",
+    "Constructors",
+    "Properties",
+    "Accessors",
+    "Methods",
+    "*"
+  ],
+
+  "plugin": [
+    "typedoc-plugin-markdown",
+    "typedoc-docusaurus-theme",
+    "typedoc-plugin-frontmatter"
+  ],
+  "frontmatterNamingConvention": "snakeCase",
+  "indexFrontmatter": {
+    "title": "API Reference",
+    "sidebar_label": "Overview"
+  },
+
+  "useCodeBlocks": true
+}
