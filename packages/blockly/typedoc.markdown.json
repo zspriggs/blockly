@@ -7,6 +7,7 @@
   "excludePrivate": true,
   "includeVersion": true,
   "skipErrorChecking": true,
+  "sourceLinkTemplate": "https://github.com/RaspberryPiFoundation/blockly/blob/{gitRevision}/{path}#L{line}",
 
   "sort": ["kind", "source-order"],
   "groupOrder": [
