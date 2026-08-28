@@ -8,7 +8,8 @@
   "includeVersion": true,
   "skipErrorChecking": true,
   "sourceLinkTemplate": "https://github.com/RaspberryPiFoundation/blockly/blob/{gitRevision}/{path}#L{line}",
-
+  "hideBreadcrumbs": false,
+  
   "sort": ["kind", "source-order"],
   "groupOrder": [
     "Classes",
