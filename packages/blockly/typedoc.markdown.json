@@ -31,7 +31,7 @@
     "typedoc-plugin-markdown",
     "typedoc-docusaurus-theme",
     "typedoc-plugin-frontmatter",
-    "./typedoc-property-pages.mjs"
+    "./scripts/typedoc-property-pages.mjs"
   ],
   "frontmatterNamingConvention": "snakeCase",
   "indexFrontmatter": {

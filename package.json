@@ -57,6 +57,5 @@
     "format:check": "prettier --check .",
     "postinstall": "patch-package",
     "clean": "npx nx reset && npm run clean --ws --if-present"
-  },
-  "dependencies": {}
+  }
 }
