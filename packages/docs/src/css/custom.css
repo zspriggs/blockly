@@ -226,10 +226,8 @@ table th p {
 }
 
 /**
- * EXPERIMENT: hide TypeDoc's per-member groups ("Properties", "Methods", ...)
- * from the reference sidebar. The nodes stay in the sidebar data so Docusaurus
- * still marks the owning class active when you are on a member page — this only
- * stops them being drawn. Tagged by hideMemberGroups() in sidebars.js.
+ * Hide TypeDoc's "Properties" pages in sidebar. 
+ * Tagged by hideMemberGroups() in sidebars.js.
  */
 .theme-doc-sidebar-menu .sidebar-hidden-member-group {
   display: none !important;
